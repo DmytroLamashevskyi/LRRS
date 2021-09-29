@@ -10,8 +10,8 @@ using WebApp.Data;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210929013016_MigrationName2")]
-    partial class MigrationName2
+    [Migration("20210929144209_UpdateDataLessons5")]
+    partial class UpdateDataLessons5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -217,6 +217,9 @@ namespace WebApp.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CourceId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -274,6 +277,8 @@ namespace WebApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CourceId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -287,10 +292,9 @@ namespace WebApp.Migrations
 
             modelBuilder.Entity("WebApp.Models.Cource", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -298,14 +302,104 @@ namespace WebApp.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Cource");
+                });
+
+            modelBuilder.Entity("WebApp.Models.FileModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Extension")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LessonId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UploadedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("FileModel");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("FileModel");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Lesson", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CourceId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("CourceId");
+
+                    b.ToTable("Lesson");
+                });
+
+            modelBuilder.Entity("WebApp.Models.FileOnDatabaseModel", b =>
+                {
+                    b.HasBaseType("WebApp.Models.FileModel");
+
+                    b.Property<byte[]>("Data")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasDiscriminator().HasValue("FileOnDatabaseModel");
+                });
+
+            modelBuilder.Entity("WebApp.Models.FileOnFileSystemModel", b =>
+                {
+                    b.HasBaseType("WebApp.Models.FileModel");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("FileOnFileSystemModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -359,13 +453,59 @@ namespace WebApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApp.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("WebApp.Models.Cource", null)
+                        .WithMany("Students")
+                        .HasForeignKey("CourceId");
+                });
+
             modelBuilder.Entity("WebApp.Models.Cource", b =>
                 {
-                    b.HasOne("WebApp.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                    b.HasOne("WebApp.Models.ApplicationUser", "Owner")
+                        .WithMany("Cources")
+                        .HasForeignKey("OwnerId");
 
-                    b.Navigation("User");
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("WebApp.Models.FileModel", b =>
+                {
+                    b.HasOne("WebApp.Models.Lesson", null)
+                        .WithMany("Files")
+                        .HasForeignKey("LessonId");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Lesson", b =>
+                {
+                    b.HasOne("WebApp.Models.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("WebApp.Models.Cource", "Cource")
+                        .WithMany("Lessons")
+                        .HasForeignKey("CourceId");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Cource");
+                });
+
+            modelBuilder.Entity("WebApp.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Cources");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Cource", b =>
+                {
+                    b.Navigation("Lessons");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Lesson", b =>
+                {
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

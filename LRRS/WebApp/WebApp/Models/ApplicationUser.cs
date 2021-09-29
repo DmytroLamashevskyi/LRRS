@@ -13,5 +13,7 @@ namespace WebApp.Models
         public string SerialPassport { set; get; }
         public string StudentId { set; get; } 
         public byte[] ProfilePicture { get; set; }
+         
+        public ICollection<Cource> Cources { get; set; }
     }
 }

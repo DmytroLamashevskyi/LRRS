@@ -21,10 +21,24 @@ namespace WebApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<FileOnFileSystemModel>();
+            builder.Entity<FileOnDatabaseModel>();
+            builder.Entity<Cource>(entity =>
+            { 
+                entity.HasMany(c => c.Lessons);
+                entity.HasMany(c => c.Students);
+            });
+            builder.Entity<Lesson>();
+
+            builder.Entity<ApplicationUser>(entity =>
+            {
+                entity.HasMany(c => c.Cources); 
+            });
+
             base.OnModelCreating(builder);
             builder.HasDefaultSchema("Identity");
             builder.Entity<IdentityUser>(entity =>
-            {
+            {  
                 entity.ToTable(name: "User");
             });
             builder.Entity<IdentityRole>(entity =>
@@ -50,7 +64,7 @@ namespace WebApp.Data
             builder.Entity<IdentityUserToken<string>>(entity =>
             {
                 entity.ToTable("UserTokens");
-            }); 
+            });
         }
 
         public DbSet<WebApp.Models.Cource> Cource { get; set; }

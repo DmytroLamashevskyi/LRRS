@@ -11,10 +11,17 @@ namespace WebApp.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public virtual ApplicationUser User { get; set; } 
+         
+        [ForeignKey("Id")]
+        public string OwnerId { get; set; }
+
+         
+        public virtual ApplicationUser Owner { get; set; } 
+        public virtual ICollection<ApplicationUser> Students { get; set; } 
+        public virtual ICollection<Lesson> Lessons { get; set; }  
 
     }
 }

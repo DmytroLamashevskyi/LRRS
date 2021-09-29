@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,12 @@ namespace WebApp.Controllers
     public class CourcesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CourcesController(ApplicationDbContext context)
+        public CourcesController(UserManager<ApplicationUser> userManager ,ApplicationDbContext context)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Cources
@@ -26,7 +30,7 @@ namespace WebApp.Controllers
         }
 
         // GET: Cources/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -35,6 +39,8 @@ namespace WebApp.Controllers
 
             var cource = await _context.Cource
                 .FirstOrDefaultAsync(m => m.Id == id);
+            cource.Owner = await _context.Users.FirstOrDefaultAsync(u=>u.Id == cource.OwnerId);
+
             if (cource == null)
             {
                 return NotFound();
@@ -54,8 +60,11 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Cource cource)
+        public async Task<IActionResult> Create(Cource cource)
         {
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            cource.Owner = applicationUser;
+            cource.OwnerId = applicationUser.Id;
             if (ModelState.IsValid)
             {
                 _context.Add(cource);
@@ -66,7 +75,7 @@ namespace WebApp.Controllers
         }
 
         // GET: Cources/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -86,7 +95,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Cource cource)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description")] Cource cource)
         {
             if (id != cource.Id)
             {
@@ -117,7 +126,7 @@ namespace WebApp.Controllers
         }
 
         // GET: Cources/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -145,7 +154,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CourceExists(int id)
+        private bool CourceExists(string id)
         {
             return _context.Cource.Any(e => e.Id == id);
         }
