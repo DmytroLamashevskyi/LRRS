@@ -28,6 +28,8 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Resources\Views\Lessons\" />
+    <Folder Include="Resources\Views\UserRoles\" />
   </ItemGroup>
 
 </Project>

@@ -40,8 +40,10 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-            return View(lesson);
+            var Input = new CourceLessonViewModel();
+            Input.Lesson = lesson;
+            Input.Cource = await _context.Cource.FirstOrDefaultAsync(c => c.Id == lesson.CourceId);
+            return View(Input);
         }
 
 
@@ -79,12 +81,18 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var lesson = await _context.Lessons.FindAsync(id);
+
+            var lesson = await _context.Lessons
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (lesson == null)
             {
                 return NotFound();
             }
-            return View(lesson);
+            var Input = new CourceLessonViewModel();
+            Input.Lesson = lesson;
+            Input.Cource = await _context.Cource.FirstOrDefaultAsync(c => c.Id == lesson.CourceId);
+
+            return View(Input);
         }
 
         // POST: Lessons/Edit/5
@@ -92,9 +100,9 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,DateTime,Description")] Lesson lesson)
+        public async Task<IActionResult> Edit(string id, CourceLessonViewModel courceLesson)
         {
-            if (id != lesson.Id)
+            if (id != courceLesson.Lesson.Id)
             {
                 return NotFound();
             }
@@ -103,12 +111,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(lesson);
+                    _context.Update(courceLesson.Lesson);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LessonExists(lesson.Id))
+                    if (!LessonExists(courceLesson.Lesson.Id))
                     {
                         return NotFound();
                     }
@@ -117,9 +125,9 @@ namespace WebApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Cources", new { Id = courceLesson.Lesson.CourceId });
             }
-            return View(lesson);
+            return View(courceLesson);
         }
 
         // GET: Lessons/Delete/5
@@ -146,9 +154,10 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var lesson = await _context.Lessons.FindAsync(id);
+            var cource = await _context.Cource.FindAsync(lesson.CourceId);
             _context.Lessons.Remove(lesson);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Cources", new { Id = cource.Id });
         }
 
         private bool LessonExists(string id)
