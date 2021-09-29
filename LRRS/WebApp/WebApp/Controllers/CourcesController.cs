@@ -24,10 +24,18 @@ namespace WebApp.Controllers
         }
 
         // GET: Cources
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Cource.ToListAsync());
+            var cources = await _context.Cource.ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                cources = cources.Where(s => s.Name.Contains(searchString)).ToList();
+            }
+
+            return View(cources); 
         }
+         
 
         // GET: Cources/Details/5
         public async Task<IActionResult> Details(string id)
@@ -95,7 +103,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description")] Cource cource)
+        public async Task<IActionResult> Edit(string id,  Cource cource)
         {
             if (id != cource.Id)
             {
@@ -146,7 +154,7 @@ namespace WebApp.Controllers
         // POST: Cources/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var cource = await _context.Cource.FindAsync(id);
             _context.Cource.Remove(cource);

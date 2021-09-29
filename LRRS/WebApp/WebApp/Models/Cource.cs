@@ -12,6 +12,8 @@ namespace WebApp.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
+        [Required]
+        [MinLength(4)]
         public string Name { get; set; }
         public string Description { get; set; }
          

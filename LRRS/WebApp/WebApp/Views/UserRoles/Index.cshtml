@@ -4,7 +4,15 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>User Roles</h1>
+ 
+
+<form asp-controller="Cources" asp-action="Index"  class="form-group row"> 
+    <div class="col-sm-10">
+      <input type="text" class="form-control" placeholder="User Information" name="SearchString" />
+    </div>
+    <input type="submit" class="col-sm-2 btn btn-primary" value="Search" />
+         
+</form>
 <table class="table table-striped">
     <thead>
         <tr>

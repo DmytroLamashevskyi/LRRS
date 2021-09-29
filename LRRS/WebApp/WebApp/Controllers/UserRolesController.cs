@@ -22,9 +22,34 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = "SuperAdmin, Administrator")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
             var users = await _userManager.Users.ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var data  = users.Where(s => {
+                    bool? result = false;
+
+                    result |= s.FirstName?.Contains(searchString);
+                    result |= s.LastName?.Contains(searchString);
+                    result |= s.UserName?.Contains(searchString);
+                    result |= s.SerialPassport?.Contains(searchString);
+                    result |= s.Email?.Contains(searchString);
+
+                    return  result??false; });
+
+                if (data != null)
+                {
+                    users = data.ToList();
+                }
+                else
+                {
+                    users = new List<ApplicationUser>();
+                }
+
+            }
+
             var userRolesViewModel = new List<UserRolesViewModel>();
             foreach (ApplicationUser user in users)
             {
