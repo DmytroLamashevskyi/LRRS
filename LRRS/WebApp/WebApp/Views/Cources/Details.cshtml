@@ -77,9 +77,22 @@
 								@Html.DisplayFor(modelItem => item.DateTime)
 			 </td>
 			 <td>
-			  <a asp-controller="Lessons" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-			  <a asp-controller="Lessons" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-			  <a asp-controller="Lessons" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+			@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+			{
+				@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+				{
+				<a asp-controller="Lessons" asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
+
+				}	
+			}
+			  <a asp-controller="Lessons" asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
+			 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+			{
+				@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+				{
+				<a asp-controller="Lessons" asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+				}	
+			}
 			 </td>
 			</tr>
 					}
