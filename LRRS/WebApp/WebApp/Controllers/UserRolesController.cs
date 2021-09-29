@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +20,8 @@ namespace WebApp.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
+
+        [Authorize(Roles = "SuperAdmin, Administrator")]
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -35,11 +38,14 @@ namespace WebApp.Controllers
             }
             return View(userRolesViewModel);
         }
+
+        [Authorize(Roles = "SuperAdmin, Administrator")]
         private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
 
+        [Authorize(Roles = "SuperAdmin, Administrator")]
         public async Task<IActionResult> Manage(string userId)
         {
             ViewBag.userId = userId;
@@ -71,6 +77,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "SuperAdmin, Administrator")]
         [HttpPost]
         public async Task<IActionResult> Manage(List<ManageUserRolesViewModel> model, string userId)
         {
@@ -95,6 +102,7 @@ namespace WebApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "SuperAdmin, Administrator")]
         public async Task<IActionResult> ManageUser(string userId)
         {
             ManageUserViewModel userViewModel = new ManageUserViewModel();
@@ -109,6 +117,7 @@ namespace WebApp.Controllers
             return View(userViewModel);
         }
 
+        [Authorize(Roles = "SuperAdmin, Administrator")]
         [HttpPost]
         public async Task<IActionResult> ManageUser(ManageUserViewModel applicationUser, string userId)
         {
