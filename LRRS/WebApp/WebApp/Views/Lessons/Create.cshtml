@@ -1,0 +1,63 @@
+﻿@model CourceLessonViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1> 
+<h4>Lesson</h4> 
+
+ <input type="text" asp-for="Cource.Name" class="form-control" disabled /> 
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Lesson.Name" class="control-label"></label>
+                <input asp-for="Lesson.Name" class="form-control" />
+                <span asp-validation-for="Lesson.Name" class="text-danger"></span>
+            </div> 
+            <div class="form-group">
+                <label asp-for="Lesson.DateTime" class="control-label"></label>
+                <input asp-for="Lesson.DateTime" class="form-control" />
+                <span asp-validation-for="Lesson.DateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="getInputValue();">Show Result</button> 
+            </div> 
+            <div class="form-group" id="HtmlOutput" >
+                
+            </div> 
+            <div class="form-group" id="HtmlOutput" > 
+                <textarea id="inp_editor1"  class="form-control" asp-for="Lesson.Description" >
+              
+                </textarea>  
+            </div> 
+            <div class="form-group"> 
+                 <input type="text" asp-for="Cource.Id" class="form-control" hidden="hidden" /> 
+            </div> 
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a  asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+ <script>
+        var editor1 = new RichTextEditor("inp_editor1");    
+
+        function getInputValue(){
+            // Selecting the input element and get its value 
+            var inputVal = document.getElementById("inp_editor1").value; 
+             document.getElementById('HtmlOutput').innerHTML = inputVal;  
+        }
+</script>

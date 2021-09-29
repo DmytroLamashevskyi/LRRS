@@ -22,14 +22,61 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Owner.FirstName)
+        </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Owner.FirstName)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Owner.LastName)
+        </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Owner.LastName)
         </dd>
     </dl>
 </div>
+<p>
+    @Html.ActionLink("Create New", "Create","Lessons", Model); 
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Date and Time
+            </th>
+            <th>
+                Description
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@if(Model.Lessons != null)
+@foreach (var item in Model.Lessons) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-controller="Lessons" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-controller="Lessons" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-controller="Lessons" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

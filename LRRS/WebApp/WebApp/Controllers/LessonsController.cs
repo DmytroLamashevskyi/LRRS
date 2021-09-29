@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,24 +11,22 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    public class CourcesController : Controller
+    public class LessonsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CourcesController(UserManager<ApplicationUser> userManager ,ApplicationDbContext context)
+        public LessonsController(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
-        // GET: Cources
-        public async Task<IActionResult> Index()
+        // GET: Lessons
+        public async Task<IActionResult> Index(string courceId)
         {
-            return View(await _context.Cource.ToListAsync());
+            return View(await _context.Lessons.Select(l=>l.CourceId == courceId).ToListAsync());
         }
 
-        // GET: Cources/Details/5
+        // GET: Lessons/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -37,44 +34,44 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var cource = await _context.Cource
+            var lesson = await _context.Lessons
                 .FirstOrDefaultAsync(m => m.Id == id);
-            cource.Owner = await _context.Users.FirstOrDefaultAsync(u=>u.Id == cource.OwnerId);
-            cource.Lessons =  _context.Lessons.Where(u => u.CourceId == id).ToList();
-            if (cource == null)
+            if (lesson == null)
             {
                 return NotFound();
             }
 
-            return View(cource);
+            return View(lesson);
         }
 
-        // GET: Cources/Create
-        public IActionResult Create()
+
+
+
+        public IActionResult Create(Cource cource)
         {
-            return View();
+            var Input = new CourceLessonViewModel();
+            Input.Cource = cource;
+            return View(Input);
         }
 
-        // POST: Cources/Create
+        // POST: Lessons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Cource cource)
+        public async Task<IActionResult> Create(CourceLessonViewModel lessonViewModel)
         {
-            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
-            cource.Owner = applicationUser;
-            cource.OwnerId = applicationUser.Id;
+            lessonViewModel.Lesson.CourceId = lessonViewModel.Cource.Id;
             if (ModelState.IsValid)
             {
-                _context.Add(cource);
+                _context.Add(lessonViewModel.Lesson);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction( "Details", "Cources",new {Id = lessonViewModel.Cource.Id });
             }
-            return View(cource);
+            return View(lessonViewModel.Lesson);
         }
 
-        // GET: Cources/Edit/5
+        // GET: Lessons/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -82,22 +79,22 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var cource = await _context.Cource.FindAsync(id);
-            if (cource == null)
+            var lesson = await _context.Lessons.FindAsync(id);
+            if (lesson == null)
             {
                 return NotFound();
             }
-            return View(cource);
+            return View(lesson);
         }
 
-        // POST: Cources/Edit/5
+        // POST: Lessons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description")] Cource cource)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,DateTime,Description")] Lesson lesson)
         {
-            if (id != cource.Id)
+            if (id != lesson.Id)
             {
                 return NotFound();
             }
@@ -106,12 +103,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(cource);
+                    _context.Update(lesson);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CourceExists(cource.Id))
+                    if (!LessonExists(lesson.Id))
                     {
                         return NotFound();
                     }
@@ -122,10 +119,10 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cource);
+            return View(lesson);
         }
 
-        // GET: Cources/Delete/5
+        // GET: Lessons/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -133,30 +130,30 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var cource = await _context.Cource
+            var lesson = await _context.Lessons
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cource == null)
+            if (lesson == null)
             {
                 return NotFound();
             }
 
-            return View(cource);
+            return View(lesson);
         }
 
-        // POST: Cources/Delete/5
+        // POST: Lessons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var cource = await _context.Cource.FindAsync(id);
-            _context.Cource.Remove(cource);
+            var lesson = await _context.Lessons.FindAsync(id);
+            _context.Lessons.Remove(lesson);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CourceExists(string id)
+        private bool LessonExists(string id)
         {
-            return _context.Cource.Any(e => e.Id == id);
+            return _context.Lessons.Any(e => e.Id == id);
         }
     }
 }

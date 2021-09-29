@@ -68,5 +68,7 @@ namespace WebApp.Data
         }
 
         public DbSet<WebApp.Models.Cource> Cource { get; set; }
+
+        public DbSet<WebApp.Models.Lesson> Lessons { get; set; }
     }
 }
