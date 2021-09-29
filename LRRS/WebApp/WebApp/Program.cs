@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Data;
@@ -16,7 +17,7 @@ namespace WebApp
     public class Program
     {
         public async static Task Main(string[] args)
-        {
+        { 
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {

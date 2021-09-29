@@ -12,7 +12,7 @@ namespace WebApp.Controllers
     public class UserRolesController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;  
 
         public UserRolesController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
@@ -70,6 +70,7 @@ namespace WebApp.Controllers
             }
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> Manage(List<ManageUserRolesViewModel> model, string userId)
         {
@@ -92,6 +93,53 @@ namespace WebApp.Controllers
                 return View(model);
             }
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> ManageUser(string userId)
+        {
+            ManageUserViewModel userViewModel = new ManageUserViewModel();
+            ViewBag.userId = userId;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
+                return View("NotFound");
+            }
+            userViewModel.User = user;
+            return View(userViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageUser(ManageUserViewModel applicationUser, string userId)
+        {
+            ManageUserViewModel userViewModel = new ManageUserViewModel();
+            ViewBag.userId = userId;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
+                return View("NotFound");
+            }
+            user.FirstName = applicationUser.User.FirstName;
+            user.LastName = applicationUser.User.LastName;
+            user.Email = applicationUser.User.Email;
+            user.StudentId = applicationUser.User.UserName;
+            user.UserName = applicationUser.User.UserName;
+            user.SerialPassport = applicationUser.User.SerialPassport;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!string.IsNullOrEmpty(applicationUser.UnsavePassword)) 
+            { 
+                var hasPassword = await _userManager.AddPasswordAsync(user, applicationUser.UnsavePassword);
+            }
+
+            if (!result.Succeeded)
+            {
+                return View(applicationUser);
+            }
+
+            userViewModel.User = user;
+            return View(applicationUser);
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Models;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace WebApp.Data
 {
@@ -21,13 +23,18 @@ namespace WebApp.Data
 
         public static async Task SeedSuperAdminAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            var config = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json", optional: true) 
+                   .Build();
+            var data =  config.GetSection("SuperAdmin").Get<ApplicationUser>();
             //Seed Default User
             var defaultUser = new ApplicationUser
             {
-                UserName = "superadmin",
-                Email = "superadmin@gmail.com",
-                FirstName = "Admin",
-                LastName = "Administrator",
+                UserName = data.UserName,  
+                Email = data.Email ,
+                FirstName = data.FirstName,
+                LastName = data.LastName ,
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
             };
@@ -36,7 +43,7 @@ namespace WebApp.Data
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, "123Pa$$word.");
+                    await userManager.CreateAsync(defaultUser, data.PasswordHash);
                     await userManager.AddToRoleAsync(defaultUser, Roles.Visitor.ToString());
                     await userManager.AddToRoleAsync(defaultUser, Roles.Student.ToString());
                     await userManager.AddToRoleAsync(defaultUser, Roles.Lecturer.ToString());
