@@ -1,8 +1,10 @@
+using EmailService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +52,11 @@ namespace WebApp
                     options.SupportedUICultures = cultures;
             });
 
+            var emailConfig = Configuration
+                            .GetSection("EmailConfiguration")
+                            .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<EmailService.IEmailSender, EmailSender>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
                     {
@@ -57,9 +64,8 @@ namespace WebApp
                     })
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultUI()
-                    .AddDefaultTokenProviders();
-
-
+                    .AddDefaultTokenProviders(); 
+            services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(1));
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
