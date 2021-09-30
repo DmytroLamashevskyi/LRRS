@@ -21,12 +21,19 @@ namespace WebApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<FileOnFileSystemModel>();
-            builder.Entity<FileOnDatabaseModel>();
+            builder.Entity<FileOnFileSystemModel>(entity =>
+            {
+                entity.ToTable(name: "FileOnFileSystem");
+            });
+            builder.Entity<FileOnDatabaseModel>(entity =>
+            {
+                entity.ToTable(name: "FileOnDatabase");
+            });
             builder.Entity<Cource>(entity =>
             { 
                 entity.HasMany(c => c.Lessons);
                 entity.HasMany(c => c.Students);
+                entity.HasMany(c => c.Marks);
             });
             builder.Entity<Lesson>();
 
@@ -34,6 +41,12 @@ namespace WebApp.Data
             {
                 entity.HasOne(c => c.Cource);
                 entity.HasOne(c => c.Student);
+            });
+
+            builder.Entity<Grade>(entity =>
+            {
+                entity.ToTable(name: "Grades");
+                entity.HasMany(e => e.Files);
             });
 
             builder.Entity<ApplicationUser>(entity =>
@@ -75,7 +88,9 @@ namespace WebApp.Data
 
         public DbSet<WebApp.Models.Cource> Cource { get; set; }
 
-        public DbSet<WebApp.Models.Lesson> Lessons { get; set; }
-        public DbSet<WebApp.Models.StudentCource> Students { get; set; } 
+        public DbSet<WebApp.Models.StudentCource> Students { get; set; }
+        public DbSet<WebApp.Models.Lesson> Lessons { get; set; } 
+        public DbSet<WebApp.Models.Grade> Grades { get; set; }
+        public DbSet<WebApp.Models.FileOnDatabaseModel> FilesOnDb { get; set; }
     }
 }

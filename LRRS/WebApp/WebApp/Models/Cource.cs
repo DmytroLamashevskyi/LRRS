@@ -20,10 +20,12 @@ namespace WebApp.Models
         [ForeignKey("Id")]
         public string OwnerId { get; set; }
 
+        public bool IsDeleted { set; get; }
          
         public virtual ApplicationUser Owner { get; set; } 
         public virtual ICollection<ApplicationUser> Students { get; set; } 
-        public virtual ICollection<Lesson> Lessons { get; set; }  
+        public virtual ICollection<Lesson> Lessons { get; set; }
+        public virtual ICollection<Grade> Marks { get; set; }
 
     }
 }

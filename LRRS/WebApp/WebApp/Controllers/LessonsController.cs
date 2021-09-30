@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,16 +15,18 @@ namespace WebApp.Controllers
     public class LessonsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LessonsController(ApplicationDbContext context)
+        public LessonsController(UserManager<ApplicationUser> userManager ,ApplicationDbContext context)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Lessons
         public async Task<IActionResult> Index(string courceId)
         {
-            return View(await _context.Lessons.Select(l => l.CourceId == courceId).ToListAsync());
+            return View(await _context.Lessons.Select(l => l.CourceId == courceId && !  l.IsDeleted).ToListAsync());
         }
 
         // GET: Lessons/Details/5
@@ -35,7 +38,7 @@ namespace WebApp.Controllers
             }
 
             var lesson = await _context.Lessons
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
             if (lesson == null)
             {
                 return NotFound();
@@ -52,7 +55,9 @@ namespace WebApp.Controllers
         public IActionResult Create(Cource cource)
         {
             var Input = new CourceLessonViewModel();
-            Input.Cource = cource; 
+            Input.Cource = cource;
+
+
             return View(Input);
         }
 
@@ -68,6 +73,21 @@ namespace WebApp.Controllers
             { 
                 _context.Add(lessonViewModel.Lesson);
                 await _context.SaveChangesAsync();
+
+                var usersList =   _context.Students.Where(s=>s.CourceId == lessonViewModel.Cource.Id);   
+                 
+                foreach (var users in usersList)
+                {
+                    var mark = new Grade()
+                    {
+                        UserId = users.StudentId,
+                        LessonId = lessonViewModel.Lesson.Id
+                    }; 
+                    _context.Grades.Add(mark);
+                }
+
+                _context.SaveChanges();
+
                 return RedirectToAction("Details", "Cources", new { Id = lessonViewModel.Cource.Id });
             }
             return View(lessonViewModel);
@@ -156,7 +176,8 @@ namespace WebApp.Controllers
         {
             var lesson = await _context.Lessons.FindAsync(id);
             var cource = await _context.Cource.FindAsync(lesson.CourceId);
-            _context.Lessons.Remove(lesson);
+            lesson.IsDeleted = true;
+            _context.Lessons.Update(lesson);
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Cources", new { Id = cource.Id });
         }

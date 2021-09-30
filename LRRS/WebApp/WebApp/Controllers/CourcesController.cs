@@ -27,7 +27,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             var cources = await _context.Cource.ToListAsync();
-
+            cources = cources.Where(c =>!c.IsDeleted).ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
                 cources = cources.Where(s => s.Name.Contains(searchString)).ToList();
@@ -87,13 +87,28 @@ namespace WebApp.Controllers
             var findUser =  _context.Students.FirstOrDefault(s => s.CourceId == data.CourceId && s.StudentId == data.StudentId);
             if (findUser == null)
             {
-                _context.Students.Add(data);
+                _context.Students.Add(data); 
+
+                var lesonList = _context.Lessons.Where(u => u.CourceId == data.CourceId && !u.IsDeleted).ToList();
+                var marks = new List<Grade>();
+                foreach (var leson in lesonList)
+                {
+                    var mark = new Grade()
+                    {
+                        UserId = userId,
+                        LessonId = leson.Id  
+                    };
+
+                    _context.Grades.Add(mark);
+                }
                 _context.SaveChanges();
+
                 return RedirectToAction(nameof(Details), new { id = data.CourceId });
             }
             else 
                 return RedirectToAction(nameof(AddStudent), new { id = data.CourceId });
         }
+
         public async Task<IActionResult> DeleteStudent(string courceid, string studentid)
         {
             if (string.IsNullOrEmpty(courceid) || string.IsNullOrEmpty(studentid))
@@ -123,9 +138,12 @@ namespace WebApp.Controllers
             var cource = await _context.Cource
                 .FirstOrDefaultAsync(m => m.Id == id);
             cource.Owner = await _context.Users.FirstOrDefaultAsync(u=>u.Id == cource.OwnerId);
-            cource.Lessons =  _context.Lessons.Where(u => u.CourceId == id).ToList();
+            cource.Lessons =  _context.Lessons.Where(u => u.CourceId == id && !u.IsDeleted).ToList();
             var studentsList = _context.Students.Where(s => s.CourceId == id).Select(s => s.StudentId).ToArray();
             cource.Students = _userManager.Users.Where(u => studentsList.Contains(u.Id)).ToList();
+
+            cource.Marks = _context.Grades.Where(s => cource.Lessons.Select(l => l.Id).ToList().Contains(s.LessonId)).ToList().OrderBy(o=>o.LessonId).ThenBy(c => c.User.StudentId).ToList();
+             
 
             if (cource == null)
             {
@@ -134,6 +152,32 @@ namespace WebApp.Controllers
 
             return View(cource);
         }
+
+        public async Task<IActionResult> UpdateMark(string markId)
+        {
+           var grade = _context.Grades.FirstOrDefaultAsync(g => g.Id == markId).Result;  
+           return View(grade);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateMark(Grade grade)
+        {
+            var value = grade.Value;
+            grade = _context.Grades.FirstOrDefaultAsync(g => g.Id == grade.Id).Result;
+            grade.Value = value;
+            if (ModelState.IsValid)
+            {
+                _context.Update(grade);
+                await _context.SaveChangesAsync();
+                grade.Lesson = _context.Lessons.FirstOrDefault(l => l.Id == grade.LessonId && !l.IsDeleted);
+                return RedirectToAction("Details", "Cources", new { Id = grade.Lesson.CourceId });
+            }
+
+
+            return View(grade);
+        }
+
+
 
         // GET: Cources/Create
         public IActionResult Create()
@@ -235,7 +279,8 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var cource = await _context.Cource.FindAsync(id);
-            _context.Cource.Remove(cource);
+            cource.IsDeleted = true;
+            _context.Cource.Update(cource);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

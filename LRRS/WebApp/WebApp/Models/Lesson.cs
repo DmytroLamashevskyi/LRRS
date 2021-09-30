@@ -25,5 +25,6 @@ namespace WebApp.Models
         [DataType(DataType.Html)]
         public string Description { set; get; }
         public ICollection<FileModel> Files { set; get; } = new List<FileModel>();
+        public bool IsDeleted { set; get; }
     }
 }
