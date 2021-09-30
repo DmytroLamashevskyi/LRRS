@@ -11,15 +11,17 @@
     <div class="col-sm-10">
       <input type="text" class="form-control" placeholder="Cource Name" name="SearchString" />
     </div>
-    <input type="submit" class="col-sm-2 btn btn-primary" value="Search" />
+    <button type="submit" class="col-sm-2 btn btn-primary" > <i class="fas fa-search"> </i> Search</button>
          
 </form>
-<p>
+<div class="btn-group" role="group" >
         @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
         { 
-           <a class="btn btn-success" asp-action="Create">Create New</a>  
+           <a class="btn btn-success" asp-action="Create"><i class="fas fa-plus"> </i> Create New</a>  
         }
-</p>
+  
+      <a class="btn btn-primary"  asp-controller="Cources"  asp-action="Index" asp-route-userId="@UserManager.GetUserAsync(User).Result.Id">Show My</a>  
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -29,35 +31,46 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            <th></th>
+            <th>  
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            <td >
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-            <td>
+            <td> 
                 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
                 {
                     @if (item.OwnerId == UserManager.GetUserAsync(User).Result.Id)
                     {
-                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-pen"> </i></a>
                     }
-                }
-                    <a asp-action="Details"  class="btn btn-primary" asp-route-id="@item.Id">Details</a>  
+                    else
+                    { 
+                         <p class="btn btn-warning invisible" ><i class="fas fa-pen"></i></p>
+                    }
+                } 
+                    <a asp-action="Details"  class="btn btn-primary" asp-route-id="@item.Id"><i class="fas fa-folder-open"> </i> </a>  
                 
                 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
                 {
                     @if (item.OwnerId == UserManager.GetUserAsync(User).Result.Id)
                     {
-                        <a asp-action="Delete"  class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Delete"  class="btn btn-danger" asp-route-id="@item.Id"><i class="fas fa-trash"> </i></a>
+                    }
+                    else
+                    { 
+                         <p class="btn btn-warning invisible" ><i class="fas fa-trash"></i></p>
                     }
                 } 
+
             </td>
         </tr>
 }

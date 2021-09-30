@@ -24,10 +24,16 @@ namespace WebApp.Controllers
         }
 
         // GET: Cources
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString,string userId)
         {
             var cources = await _context.Cource.ToListAsync();
             cources = cources.Where(c =>!c.IsDeleted).ToList();
+             
+            if (!String.IsNullOrEmpty(userId))
+            {
+                 var courcesId = _context.Students.Where(s=>s.StudentId == userId).Select(c=>c.CourceId).ToList();
+                 cources = cources.Where(c => (courcesId.Contains(c.Id) && !c.IsDeleted) || ( c.OwnerId== userId && !c.IsDeleted)).ToList();
+            }else
             if (!String.IsNullOrEmpty(searchString))
             {
                 cources = cources.Where(s => s.Name.Contains(searchString)).ToList();
@@ -155,7 +161,7 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> UpdateMark(string markId)
         {
-           var grade = _context.Grades.FirstOrDefaultAsync(g => g.Id == markId).Result;  
+           var grade = await _context.Grades.FirstOrDefaultAsync(g => g.Id == markId);  
            return View(grade);
         }
         [HttpPost]

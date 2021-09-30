@@ -120,6 +120,9 @@
   <data name="en" xml:space="preserve">
     <value>英語</value>
   </data>
+  <data name="Request culture provider" xml:space="preserve">
+    <value>语言包请求：</value>
+  </data>
   <data name="ru" xml:space="preserve">
     <value>俄語</value>
   </data>
