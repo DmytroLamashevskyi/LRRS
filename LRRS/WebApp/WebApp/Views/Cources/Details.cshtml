@@ -38,6 +38,12 @@
 	<dd class="col-sm-10">
 					@Html.DisplayFor(model => model.Owner.LastName)
 	</dd>
+	<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Owner.Email)
+	</dt>
+	<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Owner.Email)
+	</dd>
    </dl>
   </div>
   <p>
@@ -45,8 +51,7 @@
 			{
 				@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
 				{
-					@Html.ActionLink("Create New", "Create","Lessons", Model, new { @class = "btn btn-success"})
-					;
+					@Html.ActionLink("Create New", "Create","Lessons", Model, new { @class = "btn btn-success"});
 				}
 			}
   </p>
@@ -246,4 +251,5 @@
 	</div>
    </div>
   </div>
+ </div>
  </div>

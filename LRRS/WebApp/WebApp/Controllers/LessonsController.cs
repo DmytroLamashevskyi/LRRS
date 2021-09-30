@@ -52,7 +52,7 @@ namespace WebApp.Controllers
         public IActionResult Create(Cource cource)
         {
             var Input = new CourceLessonViewModel();
-            Input.Cource = cource;
+            Input.Cource = cource; 
             return View(Input);
         }
 
@@ -65,12 +65,12 @@ namespace WebApp.Controllers
         {
             lessonViewModel.Lesson.CourceId = lessonViewModel.Cource.Id;
             if (ModelState.IsValid)
-            {
+            { 
                 _context.Add(lessonViewModel.Lesson);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Cources", new { Id = lessonViewModel.Cource.Id });
             }
-            return View(lessonViewModel.Lesson);
+            return View(lessonViewModel);
         }
 
         // GET: Lessons/Edit/5
