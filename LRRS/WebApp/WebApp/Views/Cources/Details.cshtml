@@ -19,7 +19,7 @@
  <div id="Lessons" class="tab-pane fade active show in">
   <div>
    <hr />
-   <dl class="row"> 
+   <dl class="row">
 	<dt class="col-sm-2">
 					@Html.DisplayNameFor(model => model.Description)
 	</dt>
@@ -77,22 +77,22 @@
 								@Html.DisplayFor(modelItem => item.DateTime)
 			 </td>
 			 <td>
-			@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
-			{
-				@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
-				{
-				<a asp-controller="Lessons" asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
+								@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+								{
+									@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+									{
+					  <a asp-controller="Lessons" asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
 
-				}	
-			}
+									}
+								}
 			  <a asp-controller="Lessons" asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
-			 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
-			{
-				@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
-				{
-				<a asp-controller="Lessons" asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
-				}	
-			}
+								@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+								{
+									@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+									{
+					  <a asp-controller="Lessons" asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+									}
+								}
 			 </td>
 			</tr>
 					}
@@ -114,8 +114,136 @@
   </div>
  </div>
  <div id="Students" class="tab-pane fade">
+	@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+	{
+		@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+		{
+		  <a asp-action="AddStudent" class="btn btn-success" asp-route-id="@Model.Id">Add Students</a>
+		}
+	}
+  <table class="table">
+   <thead>
+	<tr>
+	 <th>
+	  Student ID
+	 </th>
+	 <th>
+	  First Name
+	 </th>
+	 <th>
+	  Last Name
+	 </th>
+	 <th>
+	  Email
+	 </th>
+	 <th></th>
+	</tr>
+   </thead>
+   <tbody>
+				@if (Model.Lessons != null)
+					@foreach (var item in Model.Students)
+					{
+			<tr>
+			 <td>
+								@Html.DisplayFor(modelItem => item.StudentId)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.FirstName)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.LastName)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.Email)
+			 </td>
+			 <td>
+				 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+				 {
+					@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+					 {
+						 @Html.ActionLink("Delete from Course","DeleteStudent", "Cources", new {courceid = Model.Id, studentid = item.Id}, new { @class="btn btn-danger" })
+						 
+					 }
+				 }
+			 </td>
+			</tr>
+			 }
+   </tbody>
+  </table>
+
  </div>
- <div id="Results" class="tab-pane fade">
-  <h3>Menu 2</h3>
-  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+ <div id="Results" class="tab-pane fade overflow-auto">
+  <div id="accordion">
+   <div class="card">
+	<div class="card-header" id="headingOne">
+	 <h5 class="mb-0">
+	  <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+	   Collapsible Group Item #1
+	  </button>
+	 </h5>
+	</div>
+
+	<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+	 <div class="card-body">
+	  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+	 </div>
+	</div>
+   </div>
+   <div class="card">
+	<div class="card-header" id="headingTwo">
+	 <h5 class="mb-0">
+	  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+	   Collapsible Group Item #2
+	  </button>
+	 </h5>
+	</div>
+	<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+	 <div class="card-body">
+	  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+	 </div>
+	</div>
+   </div>
+   <div class="card">
+	<div class="card-header" id="headingTwo">
+	 <h5 class="mb-0">
+	  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+	   Collapsible Group Item #2
+	  </button>
+	 </h5>
+	</div>
+	<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+	 <div class="card-body">
+	  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+	 </div>
+	</div>
+   </div>
+   <div class="card">
+	<div class="card-header" id="headingTwo">
+	 <h5 class="mb-0">
+	  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+	   Collapsible Group Item #2
+	  </button>
+	 </h5>
+	</div>
+	<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+	 <div class="card-body">
+	  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+	 </div>
+	</div>
+   </div>
+   <div class="card">
+	<div class="card-header" id="headingThree">
+	 <h5 class="mb-0">
+	  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+	   Collapsible Group Item #3
+	  </button>
+	 </h5>
+	</div>
+	<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+	 <div class="card-body">
+	  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+	 </div>
+	</div>
+   </div>
+  </div>
  </div>

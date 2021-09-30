@@ -30,6 +30,12 @@ namespace WebApp.Data
             });
             builder.Entity<Lesson>();
 
+            builder.Entity<StudentCource>(entity =>
+            {
+                entity.HasOne(c => c.Cource);
+                entity.HasOne(c => c.Student);
+            });
+
             builder.Entity<ApplicationUser>(entity =>
             {
                 entity.HasMany(c => c.Cources); 
@@ -70,5 +76,6 @@ namespace WebApp.Data
         public DbSet<WebApp.Models.Cource> Cource { get; set; }
 
         public DbSet<WebApp.Models.Lesson> Lessons { get; set; }
+        public DbSet<WebApp.Models.StudentCource> Students { get; set; } 
     }
 }

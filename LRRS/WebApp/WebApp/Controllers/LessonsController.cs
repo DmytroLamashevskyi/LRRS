@@ -23,7 +23,7 @@ namespace WebApp.Controllers
         // GET: Lessons
         public async Task<IActionResult> Index(string courceId)
         {
-            return View(await _context.Lessons.Select(l=>l.CourceId == courceId).ToListAsync());
+            return View(await _context.Lessons.Select(l => l.CourceId == courceId).ToListAsync());
         }
 
         // GET: Lessons/Details/5
@@ -68,7 +68,7 @@ namespace WebApp.Controllers
             {
                 _context.Add(lessonViewModel.Lesson);
                 await _context.SaveChangesAsync();
-                return RedirectToAction( "Details", "Cources",new {Id = lessonViewModel.Cource.Id });
+                return RedirectToAction("Details", "Cources", new { Id = lessonViewModel.Cource.Id });
             }
             return View(lessonViewModel.Lesson);
         }
@@ -147,6 +147,7 @@ namespace WebApp.Controllers
 
             return View(lesson);
         }
+
 
         // POST: Lessons/Delete/5
         [HttpPost, ActionName("Delete")]
