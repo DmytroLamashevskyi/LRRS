@@ -118,6 +118,7 @@
   </div>
  </div>
  <div id="Students" class="tab-pane fade">
+<hr />
 	@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
 	{
 		@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)

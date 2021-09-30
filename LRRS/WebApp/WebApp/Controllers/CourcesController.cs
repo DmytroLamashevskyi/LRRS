@@ -142,7 +142,7 @@ namespace WebApp.Controllers
             var studentsList = _context.Students.Where(s => s.CourceId == id).Select(s => s.StudentId).ToArray();
             cource.Students = _userManager.Users.Where(u => studentsList.Contains(u.Id)).ToList();
 
-            cource.Marks = _context.Grades.Where(s => cource.Lessons.Select(l => l.Id).ToList().Contains(s.LessonId)).ToList().OrderBy(o=>o.LessonId).ThenBy(c => c.User.StudentId).ToList();
+            cource.Marks = _context.Grades.Where(s => cource.Lessons.Select(l => l.Id).ToList().Contains(s.LessonId)).ToList().OrderBy(o=>o.User.StudentId).ThenBy(c => c.Lesson.Name).ToList();
              
 
             if (cource == null)

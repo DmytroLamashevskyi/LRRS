@@ -1,32 +1,24 @@
 ﻿@model WebApp.Models.CourceLessonViewModel
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="card border-primary">
+ <div class="card-header">
+  <h4 class="card-title">@Model.Lesson.Name</h4>
+  <hr />
+ </div>
 
-<div>
-    <h4>Lesson</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Lesson.Name)
-        </dt>
-        <dd class = "col-sm-4">
-            @Html.DisplayFor(model => model.Lesson.Name)
-        </dd> 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cource.Name)
-        </dt>
-        <dd class = "col-sm-4">
-            @Html.DisplayFor(model => model.Cource.Name)
-        </dd>     
-        <dd class = "col-sm-12">
-            @Html.DisplayFor(model => model.Lesson.Description)
-        </dd>
-    </dl>
-</div>
-<div> 
-    <a asp-controller="Cources" asp-action="Details" asp-route-id="@Model.Cource.Id">Back to List</a>
+ <div class="card col-sm-12">
+  <div class="card-body">
+
+			@Html.DisplayFor(model => model.Lesson.Description)
+
+  </div>
+ </div>
+ <div class="card-footer text-muted">
+  <hr />
+  <a asp-controller="Cources" asp-action="Details" class="btn btn-primary" asp-route-id="@Model.Cource.Id">Back to List</a>
+ </div>
 </div>
