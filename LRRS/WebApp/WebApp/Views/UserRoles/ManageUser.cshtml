@@ -1,0 +1,58 @@
+﻿@model ManageUserViewModel
+@{
+    ViewData["Title"] = "Manage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form method="post">
+    <div class="card">
+        <div class="card-header">
+            <h2>Manage User Data</h2> 
+        </div>
+        <partial name="_StatusMessage" for="StatusMessage" />
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="User.FirstName"></label>
+                <input asp-for="User.FirstName" class="form-control" />
+                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.LastName"></label>
+                <input asp-for="User.LastName" class="form-control" />
+                <span asp-validation-for="User.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Email"></label>
+                <input asp-for="User.Email"  class="form-control" />
+                <span asp-validation-for="User.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.UserName"></label>
+                <input asp-for="User.UserName"  class="form-control" />
+                <span asp-validation-for="User.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.PhoneNumber"></label>
+                <input asp-for="User.PhoneNumber" class="form-control" />
+                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+            </div> 
+            <div class="form-group">
+                <label asp-for="User.LockoutEnd"></label>
+                <input type="date"  asp-for="User.LockoutEnd" class="form-control" />
+                <span asp-validation-for="User.LockoutEnd" class="text-danger"></span>
+            </div> 
+            <div class="form-group">
+                <label asp-for="UnsavePassword"></label>
+                <input asp-for="UnsavePassword" class="form-control" />
+                <span asp-validation-for="UnsavePassword" class="text-danger"></span>
+            </div> 
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Update" class="btn btn-primary"
+                   style="width:auto" /> 
+            <a  asp-controller="UserRoles" asp-action="Index"
+               class="btn btn-primary" style="width:auto">Back to List</a>
+        </div>
+    </div>
+</form>

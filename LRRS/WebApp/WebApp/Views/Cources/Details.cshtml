@@ -1,0 +1,249 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject UserManager<ApplicationUser> UserManager;
+
+
+@model WebApp.Models.Cource
+
+@{
+	ViewData["Title"] = "Details";
+}
+
+<h4>@Model.Name</h4>
+
+<ul class="nav nav-tabs">
+ <li class="active"><a data-toggle="tab" href="#Lessons">Lessons</a></li>
+ <li><a data-toggle="tab" href="#Students">Students</a></li>
+ <li><a data-toggle="tab" href="#Results">Results</a></li>
+</ul>
+<div class="tab-content">
+ <div id="Lessons" class="tab-pane fade active show in">
+  <div>
+   <hr />
+   <dl class="row">
+	<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Description)
+	</dt>
+	<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Description)
+	</dd>
+	<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Owner.FirstName)
+	</dt>
+	<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Owner.FirstName)
+	</dd>
+	<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Owner.LastName)
+	</dt>
+	<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Owner.LastName)
+	</dd>
+	<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Owner.Email)
+	</dt>
+	<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Owner.Email)
+	</dd>
+   </dl>
+  </div>
+  <p>
+			@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+			{
+				@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+				{
+					@Html.ActionLink("Create New", "Create","Lessons", Model, new { @class = "btn btn-success"});
+				}
+			}
+  </p>
+  <table class="table">
+   <thead>
+	<tr>
+	 <th>
+	  Name
+	 </th>
+	 <th>
+	  Date and Time
+	 </th>
+	 <th>
+	  Description
+	 </th>
+	 <th></th>
+	</tr>
+   </thead>
+   <tbody>
+				@if (Model.Lessons != null)
+					@foreach (var item in Model.Lessons)
+					{
+			<tr>
+			 <td>
+								@Html.DisplayFor(modelItem => item.Name)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.DateTime)
+			 </td>
+			 <td>
+								@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+								{
+									@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+									{
+					  <a asp-controller="Lessons" asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
+
+									}
+								}
+			  <a asp-controller="Lessons" asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
+								@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+								{
+									@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+									{
+					  <a asp-controller="Lessons" asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+									}
+								}
+			 </td>
+			</tr>
+					}
+   </tbody>
+  </table>
+
+  <div>
+			@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+			{
+				@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+				{
+
+					<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+
+				}
+
+			}
+  </div>
+ </div>
+ <div id="Students" class="tab-pane fade">
+<hr />
+	@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+	{
+		@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+		{
+		  <a asp-action="AddStudent" class="btn btn-success" asp-route-id="@Model.Id">Add Students</a>
+		}
+	}
+  <table class="table">
+   <thead>
+	<tr>
+	 <th>
+	  Student ID
+	 </th>
+	 <th>
+	  First Name
+	 </th>
+	 <th>
+	  Last Name
+	 </th>
+	 <th>
+	  Email
+	 </th>
+	 <th></th>
+	</tr>
+   </thead>
+   <tbody>
+				@if (Model.Lessons != null)
+					@foreach (var item in Model.Students)
+					{
+			<tr>
+			 <td>
+								@Html.DisplayFor(modelItem => item.StudentId)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.FirstName)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.LastName)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.Email)
+			 </td>
+			 <td>
+				 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+				 {
+					@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+					 {
+						 @Html.ActionLink("Delete from Course","DeleteStudent", "Cources", new {courceid = Model.Id, studentid = item.Id}, new { @class="btn btn-danger" })
+						 
+					 }
+				 }
+			 </td>
+			</tr>
+			 }
+   </tbody>
+  </table>
+
+ </div>
+ <div id="Results" class="tab-pane fade">
+   <table class="table">
+   <thead>
+	<tr>
+	 <th>
+	  Student ID
+	 </th>
+	 <th>
+	  First and
+	  Last Name
+	 </th> 
+	 <th>
+	  lesson Name
+	 </th>
+	 <th>
+	  Grade
+	 </th>
+	 <th></th>
+	</tr>
+   </thead>
+   <tbody>
+				@if (Model.Marks != null)
+				{  
+					@foreach (var item in Model.Marks)
+					{
+						@if (!UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()) &&
+							 UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Student.ToString())
+						)
+						{
+							@if (item.User.Id != UserManager.GetUserAsync(User).Result.Id)
+							{
+								continue;
+							}
+						}
+							
+
+
+			<tr>
+			 <td>
+								@Html.DisplayFor(modelItem => item.User.StudentId)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.User.FirstName)
+								@Html.DisplayFor(modelItem => item.User.LastName)
+			 </td>
+			 <td>
+								@Html.DisplayFor(modelItem => item.Lesson.Name)
+			 </td>
+			 <td>
+				<div class="progress">
+				  <div class="progress-bar" role="progressbar" style="width: @item.Value%;" aria-valuenow="@item.Value" aria-valuemin="0" aria-valuemax="100">@item.Value %</div>
+				</div>
+			 </td>
+			 <td>
+				 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+				 {
+					@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
+					 {
+						 @Html.ActionLink("Add Mark","UpdateMark", "Cources", new {markId = item.Id}, new { @class="btn btn-danger" }) 
+					 }
+				 }
+			 </td>
+			</tr>
+			 }
+			 }
+   </tbody>
+  </table>
+ </div>
+ </div>
+<a asp-action="Index">Back to List</a>

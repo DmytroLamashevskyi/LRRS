@@ -1,0 +1,51 @@
+﻿@model WebApp.Models.CourceLessonViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Lesson</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Lesson.Id" />
+            <div class="form-group">
+                <label asp-for="Lesson.Name" class="control-label"></label>
+                <input asp-for="Lesson.Name" class="form-control" />
+                <span asp-validation-for="Lesson.Name" class="text-danger"></span>
+            </div> 
+            <div class="form-group" id="HtmlOutput" > 
+                <textarea id="inp_editor1"  class="form-control" asp-for="Lesson.Description" >
+              
+                </textarea>  
+            </div> 
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Cources" asp-action="Details" asp-route-id="@Model.Cource.Id">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+ <script>
+        var editor1 = new RichTextEditor("inp_editor1");    
+        function btnShowHTMLCode() {  
+          // Getting the editor data  
+          alert(editor1.getHTMLCode())  
+        }
+        function getInputValue(){
+            // Selecting the input element and get its value 
+            var inputVal = document.getElementById("inp_editor1").value; 
+             document.getElementById('HtmlOutput').innerHTML = inputVal;  
+        }
+</script>
