@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApp.Migrations
 {
-    public partial class UpdateDataLessons11 : Migration
+    public partial class UpdateDataLessonsG : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -83,7 +83,9 @@ namespace WebApp.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OwnerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,11 +98,14 @@ namespace WebApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     SerialPassport = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StudentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentId = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true),
                     ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    IsBlocked = table.Column<bool>(type: "bit", nullable: false),
                     CourceId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -288,27 +293,102 @@ namespace WebApp.Migrations
                 schema: "Identity",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Extension = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UploadedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LessonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    OwnerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LessonId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FileModel", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_FileModel_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalSchema: "Identity",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_FileModel_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalSchema: "Identity",
                         principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Grades",
+                schema: "Identity",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LessonId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grades", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Grades_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "Identity",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Grades_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalSchema: "Identity",
+                        principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileOnDatabase",
+                schema: "Identity",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileOnDatabase", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FileOnDatabase_FileModel_Id",
+                        column: x => x.Id,
+                        principalSchema: "Identity",
+                        principalTable: "FileModel",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileOnFileSystem",
+                schema: "Identity",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileOnFileSystem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FileOnFileSystem_FileModel_Id",
+                        column: x => x.Id,
+                        principalSchema: "Identity",
+                        principalTable: "FileModel",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -344,6 +424,24 @@ namespace WebApp.Migrations
                 schema: "Identity",
                 table: "FileModel",
                 column: "LessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileModel_OwnerId",
+                schema: "Identity",
+                table: "FileModel",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_LessonId",
+                schema: "Identity",
+                table: "Grades",
+                column: "LessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_UserId",
+                schema: "Identity",
+                table: "Grades",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lessons_AuthorId",
@@ -420,7 +518,15 @@ namespace WebApp.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "FileModel",
+                name: "FileOnDatabase",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "FileOnFileSystem",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "Grades",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
@@ -452,11 +558,15 @@ namespace WebApp.Migrations
                 schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "Lessons",
+                name: "FileModel",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
                 name: "Role",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "Lessons",
                 schema: "Identity");
 
             migrationBuilder.DropTable(

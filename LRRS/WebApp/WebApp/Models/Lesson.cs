@@ -18,13 +18,13 @@ namespace WebApp.Models
         public Cource Cource { set; get; }
         public ApplicationUser Author { set; get; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)] 
         public DateTime DateTime { set; get; }
          
         [DataType(DataType.Html)]
         public string Description { set; get; }
-        public ICollection<FileModel> Files { set; get; } = new List<FileModel>();
-        public bool IsDeleted { set; get; }
+        public bool IsDeleted { set; get; } 
+        public virtual ICollection<Grade> Marks { set; get; }
+        public virtual ICollection<FileModel> Files { set; get; }
     }
 }

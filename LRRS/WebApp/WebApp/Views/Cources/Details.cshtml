@@ -198,15 +198,18 @@
 	</tr>
    </thead>
    <tbody>
-				@if (Model.Marks != null)
+				@if (Model.Lessons != null)
 				{  
-					@foreach (var item in Model.Marks)
-					{
+					@foreach (var item in Model.Lessons)
+					{	
+						@foreach(var grade in item.Marks)
+						{
+							
 						@if (!UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()) &&
 							 UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Student.ToString())
 						)
 						{
-							@if (item.User.Id != UserManager.GetUserAsync(User).Result.Id)
+							@if (grade.User.Id != UserManager.GetUserAsync(User).Result.Id)
 							{
 								continue;
 							}
@@ -216,18 +219,18 @@
 
 			<tr>
 			 <td>
-								@Html.DisplayFor(modelItem => item.User.StudentId)
+								@Html.DisplayFor(modelItem => grade.User.StudentId)
 			 </td>
 			 <td>
-								@Html.DisplayFor(modelItem => item.User.FirstName)
-								@Html.DisplayFor(modelItem => item.User.LastName)
+								@Html.DisplayFor(modelItem => grade.User.FirstName)
+								@Html.DisplayFor(modelItem => grade.User.LastName)
 			 </td>
 			 <td>
-								@Html.DisplayFor(modelItem => item.Lesson.Name)
+								@Html.DisplayFor(modelItem => item.Name)
 			 </td>
 			 <td>
 				<div class="progress">
-				  <div class="progress-bar" role="progressbar" style="width: @item.Value%;" aria-valuenow="@item.Value" aria-valuemin="0" aria-valuemax="100">@item.Value %</div>
+				  <div class="progress-bar" role="progressbar" style="width: @grade.Value%;" aria-valuenow="@grade.Value" aria-valuemin="0" aria-valuemax="100">@grade.Value %</div>
 				</div>
 			 </td>
 			 <td>
@@ -235,12 +238,13 @@
 				 {
 					@if (Model.OwnerId == UserManager.GetUserAsync(User).Result.Id)
 					 {
-						 @Html.ActionLink("Add Mark","UpdateMark", "Cources", new {markId = item.Id}, new { @class="btn btn-danger" }) 
+						 @Html.ActionLink("Add Mark","UpdateMark", "Cources", new {markId = grade.Id}, new { @class="btn btn-danger" }) 
 					 }
 				 }
 			 </td>
 			</tr>
-			 }
+						}
+				}
 			 }
    </tbody>
   </table>

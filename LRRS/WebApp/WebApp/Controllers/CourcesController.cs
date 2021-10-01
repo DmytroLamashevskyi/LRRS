@@ -148,8 +148,11 @@ namespace WebApp.Controllers
             var studentsList = _context.Students.Where(s => s.CourceId == id).Select(s => s.StudentId).ToArray();
             cource.Students = _userManager.Users.Where(u => studentsList.Contains(u.Id)).ToList();
 
-            cource.Marks = _context.Grades.Where(s => cource.Lessons.Select(l => l.Id).ToList().Contains(s.LessonId)).ToList().OrderBy(o=>o.User.StudentId).ThenBy(c => c.Lesson.Name).ToList();
-             
+            foreach (var lesson in cource.Lessons)
+            {
+                lesson.Marks = await _context.Grades.Where(l => l.LessonId == lesson.Id && !lesson.IsDeleted).ToListAsync();
+                    
+            }
 
             if (cource == null)
             {
@@ -201,6 +204,7 @@ namespace WebApp.Controllers
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
             cource.Owner = applicationUser;
             cource.OwnerId = applicationUser.Id;
+            cource.CreationDate = DateTime.Now;
             if (ModelState.IsValid)
             {
                 _context.Add(cource);

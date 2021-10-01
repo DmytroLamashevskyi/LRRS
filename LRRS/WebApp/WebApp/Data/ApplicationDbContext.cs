@@ -21,21 +21,28 @@ namespace WebApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+            builder.HasDefaultSchema("Identity");
+
             builder.Entity<FileOnFileSystemModel>(entity =>
             {
+                entity.HasOne(c => c.Owner);
                 entity.ToTable(name: "FileOnFileSystem");
             });
             builder.Entity<FileOnDatabaseModel>(entity =>
             {
+                entity.HasOne(c => c.Owner);
                 entity.ToTable(name: "FileOnDatabase");
             });
             builder.Entity<Cource>(entity =>
             { 
                 entity.HasMany(c => c.Lessons);
-                entity.HasMany(c => c.Students);
+                entity.HasMany(c => c.Students); 
+            });
+            builder.Entity<Lesson>(entity => { 
+                entity.HasMany(c => c.Files);
                 entity.HasMany(c => c.Marks);
             });
-            builder.Entity<Lesson>();
 
             builder.Entity<StudentCource>(entity =>
             {
@@ -45,17 +52,16 @@ namespace WebApp.Data
 
             builder.Entity<Grade>(entity =>
             {
-                entity.ToTable(name: "Grades");
-                entity.HasMany(e => e.Files);
+                entity.ToTable(name: "Grades"); 
             });
 
             builder.Entity<ApplicationUser>(entity =>
             {
+                entity.HasMany(c => c.Grades);
+                entity.HasMany(c => c.Files);
                 entity.HasMany(c => c.Cources); 
             });
 
-            base.OnModelCreating(builder);
-            builder.HasDefaultSchema("Identity");
             builder.Entity<IdentityUser>(entity =>
             {  
                 entity.ToTable(name: "User");
@@ -86,11 +92,11 @@ namespace WebApp.Data
             });
         }
 
-        public DbSet<WebApp.Models.Cource> Cource { get; set; }
-
+        public DbSet<WebApp.Models.Cource> Cource { get; set; } 
         public DbSet<WebApp.Models.StudentCource> Students { get; set; }
         public DbSet<WebApp.Models.Lesson> Lessons { get; set; } 
         public DbSet<WebApp.Models.Grade> Grades { get; set; }
-        public DbSet<WebApp.Models.FileOnDatabaseModel> FilesOnDb { get; set; }
+        public DbSet<WebApp.Models.FileOnDatabaseModel> FilesOnDB { get; set; }
+        public DbSet<WebApp.Models.FileOnFileSystemModel> FilesOnServer { get; set; }
     }
 }

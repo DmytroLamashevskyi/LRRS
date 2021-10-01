@@ -16,10 +16,9 @@ namespace WebApp.Models
         [Range(0,100)]
         public int Value { set; get; }
         public string UserId { set; get; }
-        public ApplicationUser User { set; get; }
+        public virtual ApplicationUser User { set; get; }
         public string LessonId { set; get; }
-        public Lesson Lesson { set; get; }  
-        public ICollection<FileOnDatabaseModel> Files { set; get; }
+        public virtual Lesson Lesson { set; get; }   
 
 
     }
