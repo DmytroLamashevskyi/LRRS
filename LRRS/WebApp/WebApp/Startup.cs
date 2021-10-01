@@ -1,6 +1,7 @@
 using EmailService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -57,7 +58,12 @@ namespace WebApp
                             .Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
             services.AddScoped<EmailService.IEmailSender, EmailSender>();
-
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = int.MaxValue;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
             services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
                     {
                         cfg.User.RequireUniqueEmail = true;

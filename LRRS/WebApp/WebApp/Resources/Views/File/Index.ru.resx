@@ -117,19 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CourcesHeader" xml:space="preserve">
-    <value>Cources</value>
+  <data name="Actions" xml:space="preserve">
+    <value>Действия</value>
   </data>
-  <data name="FilesHeader" xml:space="preserve">
-    <value>Files</value>
+  <data name="ChooseFiles" xml:space="preserve">
+    <value>Выбрать файлы</value>
   </data>
-  <data name="NewsHeader" xml:space="preserve">
-    <value>News</value>
+  <data name="Created By" xml:space="preserve">
+    <value>Имя создателя</value>
   </data>
-  <data name="UsersHeader" xml:space="preserve">
-    <value>Users</value>
+  <data name="Created On" xml:space="preserve">
+    <value>Дата создания</value>
   </data>
-  <data name="WebName" xml:space="preserve">
-    <value>LRR</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="Enter File Description" xml:space="preserve">
+    <value>Введите описание файла</value>
+  </data>
+  <data name="File Type" xml:space="preserve">
+    <value>Тип файла</value>
+  </data>
+  <data name="FileHeader" xml:space="preserve">
+    <value>Файлы</value>
+  </data>
+  <data name="Files on Data Base" xml:space="preserve">
+    <value>Файлы в базе данных</value>
+  </data>
+  <data name="Files on File Syste" xml:space="preserve">
+    <value>Файлы в файловой системе</value>
+  </data>
+  <data name="List of Files on File System" xml:space="preserve">
+    <value>Список файлов в файловой системе</value>
+  </data>
+  <data name="MemmoryUsage" xml:space="preserve">
+    <value>Использование памяти</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="No Records Found" xml:space="preserve">
+    <value>Записей не найдено</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>Состояние</value>
+  </data>
+  <data name="UploadFiles" xml:space="preserve">
+    <value>Загрузить файлы</value>
   </data>
 </root>

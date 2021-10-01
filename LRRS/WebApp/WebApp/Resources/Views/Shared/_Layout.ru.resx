@@ -120,6 +120,9 @@
   <data name="CourcesHeader" xml:space="preserve">
     <value>Курсы</value>
   </data>
+  <data name="FilesHeader" xml:space="preserve">
+    <value>Файлы</value>
+  </data>
   <data name="NewsHeader" xml:space="preserve">
     <value>Новости</value>
   </data>

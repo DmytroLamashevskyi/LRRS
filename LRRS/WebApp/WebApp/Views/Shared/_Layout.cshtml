@@ -43,12 +43,12 @@
 						@if (SignInManager.IsSignedIn(User))
 						{
 		  <li class="nav-item">
-		   <a class="nav-link text-dark" asp-area="" asp-controller="Cources" asp-action="Index"><i class="fas fa-book-open"> </i> @localizer["CourcesHeader"]</a>
+		   <a class="nav-link text-dark" asp-area="" asp-controller="Cources" asp-action="Index"><i class="fas fa-graduation-cap" > </i> @localizer["CourcesHeader"]</a>
 		  </li>
 							@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
 							{
 			  <li class="nav-item">
-			   <a class="nav-link text-dark" asp-area="" asp-controller="UserRoles" asp-action="Index"><i class="fas fa-users"></i> @localizer["FilesHeader"]</a>
+			   <a class="nav-link text-dark" asp-area="" asp-controller="File" asp-action="Index"><i class="fas fa-database"></i> @localizer["FilesHeader"]</a>
 			  </li>
 							}
 

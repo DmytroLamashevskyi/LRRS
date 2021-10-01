@@ -117,19 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CourcesHeader" xml:space="preserve">
-    <value>Cources</value>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
   </data>
-  <data name="FilesHeader" xml:space="preserve">
-    <value>Files</value>
+  <data name="ChooseFiles" xml:space="preserve">
+    <value>Choose files</value>
   </data>
-  <data name="NewsHeader" xml:space="preserve">
-    <value>News</value>
+  <data name="Created By" xml:space="preserve">
+    <value>Created By</value>
   </data>
-  <data name="UsersHeader" xml:space="preserve">
-    <value>Users</value>
+  <data name="Created On" xml:space="preserve">
+    <value>Created On</value>
   </data>
-  <data name="WebName" xml:space="preserve">
-    <value>LRR</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="File Type" xml:space="preserve">
+    <value>File Type</value>
+  </data>
+  <data name="FileHeader" xml:space="preserve">
+    <value>File Administration</value>
+  </data>
+  <data name="Files on Data Base" xml:space="preserve">
+    <value>Files on Data Base</value>
+  </data>
+  <data name="Files on File Syste" xml:space="preserve">
+    <value>Files on File Syste</value>
+  </data>
+  <data name="List of Files on File System" xml:space="preserve">
+    <value>List of Files on File System</value>
+  </data>
+  <data name="MemmoryUsage" xml:space="preserve">
+    <value>Memmory Usage</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="No Records Found" xml:space="preserve">
+    <value>No Records Found</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="UploadFiles" xml:space="preserve">
+    <value>Upload Files</value>
   </data>
 </root>
