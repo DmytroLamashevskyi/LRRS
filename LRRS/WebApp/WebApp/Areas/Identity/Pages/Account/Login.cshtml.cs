@@ -97,6 +97,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                 if (IsValidEmail(Input.Email))
                 {
                     var user = await _userManager.FindByEmailAsync(Input.Email);
+
                     if (user != null)
                     {
                         userName = user.UserName;
@@ -104,12 +105,20 @@ namespace WebApp.Areas.Identity.Pages.Account
                 }
 
 
+                var userLock = await _userManager.FindByNameAsync(userName);
+
+                if (userLock != null && userLock.IsBlocked)
+                {
+                    _logger.LogWarning("User account locked out. Please Contact your Administrator.");
+                    return RedirectToPage("./Lockout");
+                }
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
 
                 var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

@@ -36,10 +36,21 @@
                 <input asp-for="User.PhoneNumber" class="form-control" />
                 <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
             </div> 
+
+            @if(!Model.Roles.Contains(Roles.SuperAdmin.ToString()) || !Model.Roles.Contains(Roles.Administrator.ToString()))
+            {
+                <div class="form-check"> 
+                     
+                    @Html.CheckBoxFor(model => model.User.IsBlocked)
+                    <label class="label form-check-label label-danger" asp-for="User.IsBlocked"> Block User</label>               
+                    
+                </div>
+            } 
+
             <div class="form-group">
-                <label asp-for="User.LockoutEnd"></label>
-                <input type="date"  asp-for="User.LockoutEnd" class="form-control" />
-                <span asp-validation-for="User.LockoutEnd" class="text-danger"></span>
+                <label asp-for="User.Birthday"></label>
+                <input type="date"  asp-for="User.Birthday" class="form-control" />
+                <span asp-validation-for="User.Birthday" class="text-danger"></span>
             </div> 
             <div class="form-group">
                 <label asp-for="UnsavePassword"></label>
