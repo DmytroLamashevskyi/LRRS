@@ -7,6 +7,13 @@
     ViewData["Title"] = "Index";
 }
 
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-danger alert-dismissible" style="margin-top:20px">
+        @ViewBag.Message
+    </div>
+}
+
 <form asp-controller="Cources" asp-action="Index"  class="form-group row"> 
     <div class="col-sm-10">
       <input type="text" class="form-control" placeholder="Cource Name" name="SearchString" />
@@ -94,13 +101,13 @@
                         else
                         {
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                              Launch demo modal
+                              Register on course
                             </button>
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <form class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" asp-controller="Cources" asp-action="RegisterOnCource"  asp-route-id="@item.Id" >
                               <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Enter password:</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                     </button>
@@ -108,18 +115,18 @@
                                   <div class="modal-body">
                                       <div class="input-group mb-3">
                                           <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1">Register on course</span>
+                                            <span class="input-group-text" id="basic-addon1">Password</span>
                                           </div>
-                                          <input type="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1">
+                                          <input type="password" name="passwordString"  class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1">
                                         </div>
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <a asp-action="RegisterOnCource"  class="btn btn-primary" asp-route-id="@item.Id">Register</a>  
+                                        <button type="submit" class="btn btn-primary" >Register</button> 
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </form>
 
                         }
 

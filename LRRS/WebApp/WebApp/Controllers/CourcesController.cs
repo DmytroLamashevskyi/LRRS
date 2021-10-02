@@ -23,6 +23,58 @@ namespace WebApp.Controllers
             _userManager = userManager;
         }
 
+        public async Task<IActionResult> RegisterOnCource(string id, string passwordString)
+        {
+           var cource = _context.Cource.FirstOrDefaultAsync(c => c.Id == id && c.Password == passwordString).Result;
+
+            if (cource == null)
+            {
+                ViewBag.Message  = "Wrong password.";
+                var cources = await _context.Cource.ToListAsync();
+                cources = cources.Where(c => !c.IsDeleted).ToList();
+
+                foreach (var item in cources)
+                {
+                    var studentsId = await _context.Students.Where(s => s.CourceId == item.Id).Select(s => s.StudentId).ToListAsync();
+                    item.Students = await _context.Users.Where(u => studentsId.Contains(u.Id)).ToListAsync();
+                }
+
+                return View("Index", cources);
+            }
+
+            var findUser = _userManager.GetUserAsync(User).Result;
+
+
+            if (findUser != null)
+            {
+                var data = new StudentCource()
+                {
+                    CourceId = id,
+                    StudentId = findUser.Id
+                };
+
+                _context.Students.Add(data);
+
+                var lesonList = _context.Lessons.Where(u => u.CourceId == data.CourceId && !u.IsDeleted).ToList();
+                var marks = new List<Grade>();
+                foreach (var leson in lesonList)
+                {
+                    var mark = new Grade()
+                    {
+                        UserId = findUser.Id,
+                        LessonId = leson.Id
+                    };
+
+                    _context.Grades.Add(mark);
+                }
+                _context.SaveChanges();
+
+            }
+
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+
         // GET: Cources
         public async Task<IActionResult> Index(string searchString,string userId)
         {
@@ -39,6 +91,11 @@ namespace WebApp.Controllers
                 cources = cources.Where(s => s.Name.Contains(searchString)).ToList();
             }
 
+            foreach(var cource in cources)
+            {
+                var studentsId =await _context.Students.Where(s => s.CourceId == cource.Id).Select(s=>s.StudentId).ToListAsync();
+                cource.Students = await _context.Users.Where(u => studentsId.Contains(u.Id)).ToListAsync();
+            } 
             return View(cources);
         }
         // GET: Cources
