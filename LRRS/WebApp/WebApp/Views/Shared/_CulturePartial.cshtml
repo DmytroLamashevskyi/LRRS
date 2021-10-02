@@ -13,7 +13,7 @@
         .ToList();
     var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString}";
 }
-<div title="@Localizer["Request culture provider:"] @requestCulture?.Provider?.GetType().Name">
+<div title="@Localizer["Request culture provider"] @requestCulture?.Provider?.GetType().Name">
     <form id="selectLanguage" 
           asp-controller="Culture"
           asp-action="SetCulture" 
@@ -21,7 +21,7 @@
           method="post" 
           class="form-horizontal nav-link text-dark" 
           role="form">
-        <select name="culture" 
+        <select name="culture" class="custom-select"
                 onchange="this.form.submit();" 
                 asp-for="@requestCulture.RequestCulture.UICulture.Name" 
                 asp-items="cultureItems">

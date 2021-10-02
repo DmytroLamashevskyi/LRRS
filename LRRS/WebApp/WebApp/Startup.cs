@@ -1,8 +1,11 @@
+using EmailService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,16 +53,26 @@ namespace WebApp
                     options.SupportedUICultures = cultures;
             });
 
-
-            services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
+            var emailConfig = Configuration
+                            .GetSection("EmailConfiguration")
+                            .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<EmailService.IEmailSender, EmailSender>();
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = int.MaxValue;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {
-                        cfg.User.RequireUniqueEmail = true;
+                        options.Password = Configuration.GetSection("PasswordRequirements").Get<PasswordOptions>(); 
+                        options.User.RequireUniqueEmail = true;
                     })
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultUI()
-                    .AddDefaultTokenProviders();
-
-
+                    .AddDefaultTokenProviders(); 
+            services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(1));
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

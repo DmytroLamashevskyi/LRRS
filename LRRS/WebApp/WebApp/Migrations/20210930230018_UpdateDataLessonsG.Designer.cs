@@ -10,8 +10,8 @@ using WebApp.Data;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210930013952_UpdateDataLessons11")]
-    partial class UpdateDataLessons11
+    [Migration("20210930230018_UpdateDataLessonsG")]
+    partial class UpdateDataLessonsG
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -213,8 +213,14 @@ namespace WebApp.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Birthday")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CourceId")
@@ -228,10 +234,17 @@ namespace WebApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -266,7 +279,8 @@ namespace WebApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -296,6 +310,9 @@ namespace WebApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -309,6 +326,9 @@ namespace WebApp.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
@@ -318,19 +338,17 @@ namespace WebApp.Migrations
 
             modelBuilder.Entity("WebApp.Models.FileModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
@@ -339,11 +357,17 @@ namespace WebApp.Migrations
                     b.Property<string>("FileType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LessonId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UploadedBy")
                         .HasColumnType("nvarchar(max)");
@@ -352,9 +376,33 @@ namespace WebApp.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("FileModel");
+                    b.HasIndex("OwnerId");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("FileModel");
+                    b.ToTable("FileModel");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Grade", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LessonId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Grades");
                 });
 
             modelBuilder.Entity("WebApp.Models.Lesson", b =>
@@ -418,7 +466,7 @@ namespace WebApp.Migrations
                     b.Property<byte[]>("Data")
                         .HasColumnType("varbinary(max)");
 
-                    b.HasDiscriminator().HasValue("FileOnDatabaseModel");
+                    b.ToTable("FileOnDatabase");
                 });
 
             modelBuilder.Entity("WebApp.Models.FileOnFileSystemModel", b =>
@@ -428,7 +476,7 @@ namespace WebApp.Migrations
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("FileOnFileSystemModel");
+                    b.ToTable("FileOnFileSystem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -503,6 +551,27 @@ namespace WebApp.Migrations
                     b.HasOne("WebApp.Models.Lesson", null)
                         .WithMany("Files")
                         .HasForeignKey("LessonId");
+
+                    b.HasOne("WebApp.Models.ApplicationUser", "Owner")
+                        .WithMany("Files")
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Grade", b =>
+                {
+                    b.HasOne("WebApp.Models.Lesson", "Lesson")
+                        .WithMany("Marks")
+                        .HasForeignKey("LessonId");
+
+                    b.HasOne("WebApp.Models.ApplicationUser", "User")
+                        .WithMany("Grades")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebApp.Models.Lesson", b =>
@@ -535,9 +604,31 @@ namespace WebApp.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("WebApp.Models.FileOnDatabaseModel", b =>
+                {
+                    b.HasOne("WebApp.Models.FileModel", null)
+                        .WithOne()
+                        .HasForeignKey("WebApp.Models.FileOnDatabaseModel", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApp.Models.FileOnFileSystemModel", b =>
+                {
+                    b.HasOne("WebApp.Models.FileModel", null)
+                        .WithOne()
+                        .HasForeignKey("WebApp.Models.FileOnFileSystemModel", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("WebApp.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Cources");
+
+                    b.Navigation("Files");
+
+                    b.Navigation("Grades");
                 });
 
             modelBuilder.Entity("WebApp.Models.Cource", b =>
@@ -550,6 +641,8 @@ namespace WebApp.Migrations
             modelBuilder.Entity("WebApp.Models.Lesson", b =>
                 {
                     b.Navigation("Files");
+
+                    b.Navigation("Marks");
                 });
 #pragma warning restore 612, 618
         }

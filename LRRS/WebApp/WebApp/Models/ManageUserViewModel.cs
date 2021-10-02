@@ -10,6 +10,7 @@ namespace WebApp.Models
     public class ManageUserViewModel
     {
         public ApplicationUser User { set; get; }
+        public IEnumerable<string> Roles { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

@@ -120,6 +120,9 @@
   <data name="en" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="Request culture provider" xml:space="preserve">
+    <value>Request culture provider</value>
+  </data>
   <data name="ru" xml:space="preserve">
     <value>Russian</value>
   </data>

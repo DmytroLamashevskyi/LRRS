@@ -23,16 +23,79 @@ namespace WebApp.Controllers
             _userManager = userManager;
         }
 
+        public async Task<IActionResult> RegisterOnCource(string id, string passwordString)
+        {
+           var cource = _context.Cource.FirstOrDefaultAsync(c => c.Id == id && c.Password == passwordString).Result;
+
+            if (cource == null)
+            {
+                ViewBag.Message  = "Wrong password.";
+                var cources = await _context.Cource.ToListAsync();
+                cources = cources.Where(c => !c.IsDeleted).ToList();
+
+                foreach (var item in cources)
+                {
+                    var studentsId = await _context.Students.Where(s => s.CourceId == item.Id).Select(s => s.StudentId).ToListAsync();
+                    item.Students = await _context.Users.Where(u => studentsId.Contains(u.Id)).ToListAsync();
+                }
+
+                return View("Index", cources);
+            }
+
+            var findUser = _userManager.GetUserAsync(User).Result;
+
+
+            if (findUser != null)
+            {
+                var data = new StudentCource()
+                {
+                    CourceId = id,
+                    StudentId = findUser.Id
+                };
+
+                _context.Students.Add(data);
+
+                var lesonList = _context.Lessons.Where(u => u.CourceId == data.CourceId && !u.IsDeleted).ToList();
+                var marks = new List<Grade>();
+                foreach (var leson in lesonList)
+                {
+                    var mark = new Grade()
+                    {
+                        UserId = findUser.Id,
+                        LessonId = leson.Id
+                    };
+
+                    _context.Grades.Add(mark);
+                }
+                _context.SaveChanges();
+
+            }
+
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+
         // GET: Cources
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString,string userId)
         {
             var cources = await _context.Cource.ToListAsync();
             cources = cources.Where(c =>!c.IsDeleted).ToList();
+             
+            if (!String.IsNullOrEmpty(userId))
+            {
+                 var courcesId = _context.Students.Where(s=>s.StudentId == userId).Select(c=>c.CourceId).ToList();
+                 cources = cources.Where(c => (courcesId.Contains(c.Id) && !c.IsDeleted) || ( c.OwnerId== userId && !c.IsDeleted)).ToList();
+            }else
             if (!String.IsNullOrEmpty(searchString))
             {
                 cources = cources.Where(s => s.Name.Contains(searchString)).ToList();
             }
 
+            foreach(var cource in cources)
+            {
+                var studentsId =await _context.Students.Where(s => s.CourceId == cource.Id).Select(s=>s.StudentId).ToListAsync();
+                cource.Students = await _context.Users.Where(u => studentsId.Contains(u.Id)).ToListAsync();
+            } 
             return View(cources);
         }
         // GET: Cources
@@ -142,8 +205,11 @@ namespace WebApp.Controllers
             var studentsList = _context.Students.Where(s => s.CourceId == id).Select(s => s.StudentId).ToArray();
             cource.Students = _userManager.Users.Where(u => studentsList.Contains(u.Id)).ToList();
 
-            cource.Marks = _context.Grades.Where(s => cource.Lessons.Select(l => l.Id).ToList().Contains(s.LessonId)).ToList().OrderBy(o=>o.User.StudentId).ThenBy(c => c.Lesson.Name).ToList();
-             
+            foreach (var lesson in cource.Lessons)
+            {
+                lesson.Marks = await _context.Grades.Where(l => l.LessonId == lesson.Id && !lesson.IsDeleted).ToListAsync();
+                    
+            }
 
             if (cource == null)
             {
@@ -155,7 +221,7 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> UpdateMark(string markId)
         {
-           var grade = _context.Grades.FirstOrDefaultAsync(g => g.Id == markId).Result;  
+           var grade = await _context.Grades.FirstOrDefaultAsync(g => g.Id == markId);  
            return View(grade);
         }
         [HttpPost]
@@ -195,6 +261,7 @@ namespace WebApp.Controllers
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
             cource.Owner = applicationUser;
             cource.OwnerId = applicationUser.Id;
+            cource.CreationDate = DateTime.Now;
             if (ModelState.IsValid)
             {
                 _context.Add(cource);

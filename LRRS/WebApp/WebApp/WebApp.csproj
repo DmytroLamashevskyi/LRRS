@@ -32,4 +32,8 @@
     <Folder Include="Resources\Views\UserRoles\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\EmailService\EmailService.csproj" />
+  </ItemGroup>
+
 </Project>

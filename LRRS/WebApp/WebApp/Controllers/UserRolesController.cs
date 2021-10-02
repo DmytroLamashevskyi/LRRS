@@ -133,12 +133,20 @@ namespace WebApp.Controllers
             ManageUserViewModel userViewModel = new ManageUserViewModel();
             ViewBag.userId = userId;
             var user = await _userManager.FindByIdAsync(userId);
+            var roles = await GetUserRoles(user);
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
                 return View("NotFound");
             }
+            if (roles == null)
+            {
+                ViewBag.ErrorMessage = $"Roles for user Id = {userId} cannot be found";
+                return View("NotFound");
+            }
+
             userViewModel.User = user;
+            userViewModel.Roles = roles;
             return View(userViewModel);
         }
 
@@ -158,8 +166,10 @@ namespace WebApp.Controllers
             user.LastName = applicationUser.User.LastName;
             user.Email = applicationUser.User.Email;
             user.StudentId = applicationUser.User.UserName;
+            user.IsBlocked = applicationUser.User.IsBlocked;
             user.UserName = applicationUser.User.UserName;
             user.SerialPassport = applicationUser.User.SerialPassport;
+            applicationUser.Roles = await GetUserRoles(user);
 
             var result = await _userManager.UpdateAsync(user);
             if (!string.IsNullOrEmpty(applicationUser.UnsavePassword)) 
