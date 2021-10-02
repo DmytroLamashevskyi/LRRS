@@ -106,6 +106,12 @@ PM> Update-Database
 
 Run Application and login using **SuperAdmin** Credentials
 
+## Installation on Server
+   
+  [Publish an ASP.NET Core app to IIS](https://docs.microsoft.com/en-us/aspnet/core/tutorials/publish-to-iis?view=aspnetcore-5.0&tabs=visual-studio)
+  [Publish an ASP.NET Core App to Azure](https://medium.com/net-core/deploy-an-asp-net-core-app-with-ef-core-and-sql-server-to-azure-e11df41a4804)  
+
+  Remember to install DB credentials and run Migration on VS
 
 ## Roadmap
 
@@ -135,15 +141,17 @@ Run Application and login using **SuperAdmin** Credentials
 
 * Release V0.3b
     - Add statistics for Cource
-    - Add Files to Cource
+    - Add upload Files to Lecture 
+    - Add Lecture deadline 
+    - Add mailing to Students (add checkbox for this)
     - Adding pdf file generating
-    - Adding Administrator Tab for application settings managment
     - Bugfix
     - Refactoring
     
 * Release V0.4b
     - Add Tests environment
     - Add News Envierment 
+    - Adding Administrator Tab for application settings managment   
     - Finish implementing Language pages
     - Add Paging for Cources and Users panels
     - Refactoring
