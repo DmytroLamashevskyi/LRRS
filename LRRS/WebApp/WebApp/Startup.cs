@@ -64,9 +64,10 @@ namespace WebApp
                 options.MultipartBodyLengthLimit = int.MaxValue;
                 options.MultipartHeadersLengthLimit = int.MaxValue;
             });
-            services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {
-                        cfg.User.RequireUniqueEmail = true;
+                        options.Password = Configuration.GetSection("PasswordRequirements").Get<PasswordOptions>(); 
+                        options.User.RequireUniqueEmail = true;
                     })
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultUI()

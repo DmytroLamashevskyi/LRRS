@@ -26,6 +26,9 @@
     <thead>
         <tr>
             <th>
+                  
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
@@ -38,7 +41,29 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            <tr>
+                <td >
+                    @if (string.IsNullOrEmpty(item.Password))
+                    {
+                        <i class="fas fa-eye"></i>
+                    }
+                    else
+                    {
+                          
+                        if (UserManager.GetUserAsync(User).Result.Id.Equals(item.OwnerId))
+                        {
+                            <i class="fas fa-user-graduate"></i>
+                        }
+                        else if(item.Students!=null &&  item.Students.Contains(UserManager.GetUserAsync(User).Result))
+                        {
+                            <i class="fas fa-lock-open"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-lock"></i>
+                        }
+                    }
+            </td>
             <td >
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -56,9 +81,50 @@
                     { 
                          <p class="btn btn-warning invisible" ><i class="fas fa-pen"></i></p>
                     }
-                } 
-                    <a asp-action="Details"  class="btn btn-primary" asp-route-id="@item.Id"><i class="fas fa-folder-open"> </i> </a>  
+                }
                 
+                        @if (UserManager.GetUserAsync(User).Result.Id.Equals(item.OwnerId))
+                        {
+                            <a asp-action="Details"  class="btn btn-primary" asp-route-id="@item.Id"><i class="fas fa-folder-open"> </i> </a>  
+                        }
+                        else if(item.Students!=null &&  item.Students.Contains(UserManager.GetUserAsync(User).Result))
+                        {
+                            <a asp-action="Details"  class="btn btn-primary" asp-route-id="@item.Id"><i class="fas fa-folder-open"> </i> </a>  
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                              Launch demo modal
+                            </button>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="input-group mb-3">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Register on course</span>
+                                          </div>
+                                          <input type="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1">
+                                        </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a asp-action="RegisterOnCource"  class="btn btn-primary" asp-route-id="@item.Id">Register</a>  
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                        }
+
+
+                    
                 @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
                 {
                     @if (item.OwnerId == UserManager.GetUserAsync(User).Result.Id)
