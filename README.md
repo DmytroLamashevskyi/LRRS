@@ -4,14 +4,33 @@
 Web applications for online student learning. makes it possible to add courses and post grades with lessons. Also the ability to take tests and the ability for students to upload laboratory work.
 
 
+## Screenshots
+
+### Access Managment 
+![Access Managment](https://github.com/DmytroLamashevskyi/LRRS/blob/master/Screens/AccessManagment.png?raw=true)
+### Cource Students Managment
+![CourceStudentsManagment Screenshot](https://github.com/DmytroLamashevskyi/LRRS/blob/master/Screens/CourceStudentsManagment.png?raw=true)
+### Cources
+![Cources Screenshot](https://github.com/DmytroLamashevskyi/LRRS/blob/master/Screens/Cources.png?raw=true)
+### Grades
+![Grades Screenshot](https://github.com/DmytroLamashevskyi/LRRS/blob/master/Screens/Grades.png?raw=true)
+### Lectures
+![Lectures Screenshot](https://github.com/DmytroLamashevskyi/LRRS/blob/master/Screens/Lectures.png?raw=true)
+### User Managment
+![UserManagment Screenshot](https://github.com/DmytroLamashevskyi/LRRS/blob/master/Screens/UserManagment.png?raw=true)
+
+[Other Screenshots](https://github.com/DmytroLamashevskyi/LRRS/blob/master/Screens/)
+
+  
 
 ## Used tools 
  - [ASP.NET Core MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/overview?view=aspnetcore-5.0)
  - [EF Core](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro?view=aspnetcore-5.0)
  - [Rich Text Editor](https://richtexteditor.com/)
  - [Bootstrap](https://getbootstrap.com/)
-
-  
+ - [Fontawesome icons](https://fontawesome.com/)
+ - [MailKit](https://www.nuget.org/packages/MailKit/2.15.0?_src=template)
+ - [MimeKit](https://www.nuget.org/packages/MimeKit/2.15.1?_src=template)
 ## Run Locally
 
 Clone the project
@@ -52,6 +71,29 @@ Update SuperAdmin user
   },
 ```
 
+Update mail stmp server
+```code
+  "EmailConfiguration": {
+    "From": "mail@gmail.com",
+    "SmtpServer": "smtp.gmail.com",
+    "Port": 465,
+    "Username": "login",
+    "Password": "password"
+  },
+```
+
+Update Password requirements
+```code
+  "PasswordRequirements": {
+    "RequiredLength": 6,
+    "RequiredUniqueChars": 0,
+    "RequireNonAlphanumeric": false,
+    "RequireLowercase": true,
+    "RequireUppercase": false,
+    "RequireDigit": false
+  },
+```  
+
 Add migration for Data base
 ```code
 PM> Add-Migration <Name>
@@ -81,18 +123,35 @@ Run Application and login using **SuperAdmin** Credentials
 
 * Release V0.2b
     - Block for Users 
-    - Adding Files
     - File Managment
     - File Upload
-    - Add password cources 
-    - Add public cources 
+    - File Upload Limits (for DB 3Mb Max)
+    - Adding Files in Database and on Server
+    - Added File unique name generation
+    - Add password cources  
     - Update Language support Views
+    - Added mail change Password
+    - Added mail password confirmation
 
 * Release V0.3b
     - Add statistics for Cource
-    - Adding pdf Output
-    - Adding pdf Subjects Data
+    - Add Files to Cource
+    - Adding pdf file generating
+    - Adding Administrator Tab for application settings managment
+    - Bugfix
+    - Refactoring
     
+* Release V0.4b
+    - Add Tests environment
+    - Add News Envierment 
+    - Finish implementing Language pages
+    - Add Paging for Cources and Users panels
+    - Refactoring
+
+* Release V0.5b
+    - Add Version controll for DB
+    - Add mail information sending
+
 ## Authors
 
 - [@DmytroLamashevskyi](https://github.com/DmytroLamashevskyi)
