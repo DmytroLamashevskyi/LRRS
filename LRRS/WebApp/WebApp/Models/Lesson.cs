@@ -12,19 +12,22 @@ namespace WebApp.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { set; get; }
-        public string Name { set; get; } 
+        [MinLength(4)]
+        public string Name { set; get; }
 
+        [ForeignKey("Cource")]
         public string CourceId { set; get; }
         public Cource Cource { set; get; }
         public ApplicationUser Author { set; get; }
 
-        [DataType(DataType.Date)] 
-        public DateTime DateTime { set; get; }
-         
+        [DataType(DataType.Date)]  
+        public DateTime DateTime { set; get; } = DateTime.Today;
+
         [DataType(DataType.Html)]
         public string Description { set; get; }
         public bool IsDeleted { set; get; } 
         public virtual ICollection<Grade> Marks { set; get; }
         public virtual ICollection<FileModel> Files { set; get; }
+        public virtual ICollection<ClassesTest> ClassesTests { set; get; }
     }
 }

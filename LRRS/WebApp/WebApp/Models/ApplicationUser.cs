@@ -34,5 +34,6 @@ namespace WebApp.Models
         public virtual ICollection<FileModel> Files { get; set; }
         public virtual ICollection<Cource> Cources { get; set; }
         public virtual ICollection<Grade> Grades { get; set; }
+        public virtual ICollection<UserTestMarks> TestMarks { set; get; }
     }
 }

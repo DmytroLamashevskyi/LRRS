@@ -120,7 +120,7 @@ namespace WebApp.Controllers
                     result |= s.UserName?.Contains(searchString);
                     result |= s.SerialPassport?.Contains(searchString);
                     result |= s.Email?.Contains(searchString);
-
+                     
                     return result ?? false;
                 });
 
@@ -303,6 +303,9 @@ namespace WebApp.Controllers
             {
                 try
                 {
+                    ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+                    cource.Owner = applicationUser;
+                    cource.OwnerId = applicationUser.Id;
                     _context.Update(cource);
                     await _context.SaveChangesAsync();
                 }

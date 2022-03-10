@@ -30,109 +30,78 @@ namespace WebApp.Controllers
         }
 
         // GET: Lessons/Details/5
-        public async Task<IActionResult> Details(string id)
+        public IActionResult Details(string id)
         {
-            if (id == null)
+            var Input = new LessonViewModel().GetLessonById(_context, id);
+            if (Input == null)
             {
                 return NotFound();
             }
-
-            var lesson = await _context.Lessons
-                .FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
-            if (lesson == null)
-            {
-                return NotFound();
-            }
-            var Input = new CourceLessonViewModel();
-            Input.Lesson = lesson;
-            Input.Cource = await _context.Cource.FirstOrDefaultAsync(c => c.Id == lesson.CourceId);
             return View(Input);
-        }
+        } 
 
-
-
-
+        /// <summary>
+        /// Create from Cours view
+        /// </summary>
+        /// <param name="cource"></param>
+        /// <returns></returns>
         public IActionResult Create(Cource cource)
         {
-            var Input = new CourceLessonViewModel();
+            var Input = new LessonViewModel();
             Input.Cource = cource;
-
-
+             
             return View(Input);
         }
 
-        // POST: Lessons/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Create button on Lesson View Create
+        /// </summary>
+        /// <param name="lessonViewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CourceLessonViewModel lessonViewModel)
+        public async Task<IActionResult> Create(LessonViewModel lessonViewModel)
         {
-            lessonViewModel.Lesson.CourceId = lessonViewModel.Cource.Id;
             if (ModelState.IsValid)
-            { 
-                _context.Add(lessonViewModel.Lesson);
-                await _context.SaveChangesAsync();
-
-                var usersList =   _context.Students.Where(s=>s.CourceId == lessonViewModel.Cource.Id);   
-                 
-                foreach (var users in usersList)
-                {
-                    var mark = new Grade()
-                    {
-                        UserId = users.StudentId,
-                        LessonId = lessonViewModel.Lesson.Id
-                    }; 
-                    _context.Grades.Add(mark);
-                }
-
-                _context.SaveChanges();
-
+            {
+                lessonViewModel.CreateLesson(_context);  
                 return RedirectToAction("Details", "Cources", new { Id = lessonViewModel.Cource.Id });
             }
             return View(lessonViewModel);
         }
 
-        // GET: Lessons/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        /// <summary>
+        /// Click on Edit button in Cours view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult Edit(string id)
         {
-            if (id == null)
+
+            var Input = new LessonViewModel().GetLessonById(_context, id);
+            if (Input == null)
             {
                 return NotFound();
             }
-
-
-            var lesson = await _context.Lessons
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lesson == null)
-            {
-                return NotFound();
-            }
-            var Input = new CourceLessonViewModel();
-            Input.Lesson = lesson;
-            Input.Cource = await _context.Cource.FirstOrDefaultAsync(c => c.Id == lesson.CourceId);
-
             return View(Input);
         }
 
-        // POST: Lessons/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Save edited lesson by submit button
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="courceLesson"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, CourceLessonViewModel courceLesson)
-        {
-            if (id != courceLesson.Lesson.Id)
-            {
-                return NotFound();
-            }
-
+        public async Task<IActionResult> Edit(LessonViewModel courceLesson)
+        {  
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(courceLesson.Lesson);
-                    await _context.SaveChangesAsync();
+                    courceLesson.UpdateLesson(_context);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -147,25 +116,20 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction("Details", "Cources", new { Id = courceLesson.Lesson.CourceId });
             }
-            return View(courceLesson);
-        }
+            return Details(courceLesson.Lesson.Id);
+        } 
 
         // GET: Lessons/Delete/5
         public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        { 
 
-            var lesson = await _context.Lessons
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(m => m.Id == id);
             if (lesson == null)
             {
                 return NotFound();
-            }
+            } 
 
-            return View(lesson);
+            return View(new LessonViewModel() {Lesson = lesson});
         }
 
 

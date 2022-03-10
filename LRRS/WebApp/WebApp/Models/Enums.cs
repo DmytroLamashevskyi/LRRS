@@ -13,4 +13,10 @@ namespace WebApp.Models
         Student,
         Visitor
     }
+     
+    public enum QuestionType
+    {
+        SingleOption,
+        OpenAnswer
+    }
 }

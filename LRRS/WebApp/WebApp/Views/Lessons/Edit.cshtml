@@ -1,51 +1,146 @@
-﻿@model WebApp.Models.CourceLessonViewModel
+﻿@model LessonViewModel
+
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
 <h1>Edit</h1>
 
-<h4>Lesson</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Lesson.Id" />
-            <div class="form-group">
-                <label asp-for="Lesson.Name" class="control-label"></label>
-                <input asp-for="Lesson.Name" class="form-control" />
-                <span asp-validation-for="Lesson.Name" class="text-danger"></span>
-            </div> 
-            <div class="form-group" id="HtmlOutput" > 
-                <textarea id="inp_editor1"  class="form-control" asp-for="Lesson.Description" >
-              
-                </textarea>  
-            </div> 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+@Html.AntiForgeryToken()
+@Html.HiddenFor(model => model.CourceId)
+@Html.HiddenFor(model => model.LessonId)
+ 
+<div class="col-md-12">
+	@using (Html.BeginForm())
+	{
+		@Html.AntiForgeryToken()
+		
+	 <div class="card">
+	  <h5 class="card-header h5">Lesson</h5>
+	  <div class="card-body">
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		@Html.HiddenFor(model => model.Cource.Name)
+		@Html.HiddenFor(model => model.Lesson.CourceId)
+		@Html.HiddenFor(model => model.Lesson.Id)
 
-<div>
-    <a asp-controller="Cources" asp-action="Details" asp-route-id="@Model.Cource.Id">Back to List</a>
+	 <div class="col-xs-12 form-group">
+			@Html.LabelFor(model => model.Lesson.Name, htmlAttributes: new { @class = "control-label col-md-6" })
+	  <div class="col-md-6">
+				@Html.EditorFor(model => model.Lesson.Name, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Lesson.Name, "", new { @class = "text-danger" })
+	  </div>
+	 </div>
+
+	 <div class="col-xs-12  form-group">
+			@Html.LabelFor(model => model.Lesson.DateTime, htmlAttributes: new { @class = "control-label col-md-6" })
+	  <div class="col-md-6">
+				@Html.EditorFor(model => model.Lesson.DateTime, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Lesson.DateTime, "", new { @class = "text-danger" })
+	  </div>
+	 </div>
+
+	 <div class="col-xs-12 form-group">
+			@Html.LabelFor(model => model.Lesson.Description, htmlAttributes: new { @class = "control-label col-md-6" })
+	  <div class="form-group" id="HtmlOutput">
+				@Html.TextAreaFor(model => model.Lesson.Description,   new { @class = "form-control" , id="inp_editor1" })
+
+	  </div>
+	 </div>
+	  </div>
+	</div>
+	  
+	 <hr />
+	 <div class="card">
+	  <h5 class="card-header h5">Tests</h5>
+	  <div class="card-body">
+
+	 <div class="col-xs-12 form-group">
+	  <div class="btn-group" role="group">
+	   <a class="btn btn-success" asp-action="Create"><i class="fas fa-plus"> </i> Create New Test</a>
+	  </div>
+			@if (Model.Lesson.ClassesTests == null || Model.Lesson.ClassesTests.Count == 0)
+			{
+		  <h4>No Tests</h4>
+
+			}
+			else
+			{
+		  <table class="table">
+		   <thead>
+			<tr>
+			 <th scope="col">#</th>
+			 <th scope="col">Header</th>
+			 <th scope="col">Start Time</th>
+			 <th scope="col">End Time</th>
+			 <th>
+			  Actions
+			 </th>
+			</tr>
+		   </thead>
+		   <tbody>
+
+						@foreach (var item in Model.Lesson.ClassesTests)
+						{
+				<tr>
+				 <td>
+				 <th scope="row">1</th>
+				 </td>
+				 <td>
+									@Html.DisplayFor(modelItem => item.Header)
+				 </td>
+				 <td>
+									@Html.DisplayFor(modelItem => item.Description)
+				 </td>
+				 <td>
+									@Html.DisplayFor(modelItem => item.StartTime)
+				 </td>
+				 <td>
+									@Html.DisplayFor(modelItem => item.EndTime)
+				 </td>
+				 <td>
+				  <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-pen"> </i></a>
+				 </td>
+				 <td>
+				  <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id"><i class="fas fa-folder-open"> </i> </a>
+				 </td>
+				 <td>
+				  <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id"><i class="fas fa-trash"> </i></a>
+				 </td>
+				</tr>
+						}
+		   </tbody>
+		  </table>
+
+			}
+	 </div>
+	  </div>
+	</div>
+	 
+	 <hr />
+	 
+	 <div class="col-xs-6 form-group">
+	  <a asp-controller="Cources" class="btn btn-dark" asp-action="Details" asp-route-id="@Model.Cource.Id">Back to List</a>
+	 </div>
+
+	 <div class="col-xs-6 form-group">
+	  <input type="submit" value="Save" class="btn btn-primary  float-right" />
+	 </div>
+	}
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
- <script>
-        var editor1 = new RichTextEditor("inp_editor1");    
-        function btnShowHTMLCode() {  
-          // Getting the editor data  
-          alert(editor1.getHTMLCode())  
-        }
-        function getInputValue(){
-            // Selecting the input element and get its value 
-            var inputVal = document.getElementById("inp_editor1").value; 
-             document.getElementById('HtmlOutput').innerHTML = inputVal;  
-        }
+<script>
+ var editor1 = new RichTextEditor("inp_editor1");
+ function btnShowHTMLCode() {
+   // Getting the editor data
+   alert(editor1.getHTMLCode())
+ }
+ function getInputValue(){
+  // Selecting the input element and get its value
+  var inputVal = document.getElementById("inp_editor1").value;
+   document.getElementById('HtmlOutput').innerHTML = inputVal;
+ }
 </script>

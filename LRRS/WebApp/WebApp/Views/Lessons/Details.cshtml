@@ -1,4 +1,4 @@
-﻿@model WebApp.Models.CourceLessonViewModel
+﻿@model LessonViewModel
 
 @{
 	ViewData["Title"] = "Details";
@@ -17,6 +17,20 @@
 
   </div>
  </div>
+  <hr /> 
+ <div class="card">
+  <div class="card-header">
+    Test
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Test Header</h5>
+    <p class="card-text">Test Description</p> 
+
+      <p class="card-text"><small class="text-muted">End Time</small></p>
+    <a href="#!" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+
  <div class="card-footer text-muted">
   <hr />
   <a asp-controller="Cources" asp-action="Details" class="btn btn-primary" asp-route-id="@Model.Cource.Id">Back to List</a>

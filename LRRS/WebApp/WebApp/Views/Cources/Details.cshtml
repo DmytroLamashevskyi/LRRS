@@ -209,7 +209,7 @@
 							 UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Student.ToString())
 						)
 						{
-							@if (grade.User.Id != UserManager.GetUserAsync(User).Result.Id)
+							@if (grade.User.Id != UserManager.GetUserAsync(User)?.Result.Id)
 							{
 								continue;
 							}
