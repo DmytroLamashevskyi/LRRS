@@ -1,4 +1,7 @@
 using EmailService;
+using LanguageService;
+using LRRS.Data.Model.Entity;
+using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -13,13 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using WebApp.Data;
-using WebApp.Models;
+using System.Globalization; 
 
-namespace WebApp
+namespace LRRS.WebApp
 {
     public class Startup
     {
@@ -75,6 +74,10 @@ namespace WebApp
             services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(1));
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            //Language and LocalizationService
+            services.AddScoped<ILanguageService, LanguageService.LanguageService>();
+            services.AddScoped<ILocalizationService, LocalizationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,7 +109,7 @@ namespace WebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=News}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

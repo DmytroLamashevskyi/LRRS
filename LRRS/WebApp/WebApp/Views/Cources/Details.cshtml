@@ -219,11 +219,15 @@
 
 			<tr>
 			 <td>
+					@if(grade.User !=null){
 								@Html.DisplayFor(modelItem => grade.User.StudentId)
+					} 
 			 </td>
 			 <td>
+					@if(grade.User !=null){
 								@Html.DisplayFor(modelItem => grade.User.FirstName)
 								@Html.DisplayFor(modelItem => grade.User.LastName)
+					} 
 			 </td>
 			 <td>
 								@Html.DisplayFor(modelItem => item.Name)

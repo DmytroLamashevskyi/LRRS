@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.File;
+using LRRS.Queries.DataBase;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApp.Data;
-using WebApp.Models;
+
 
 namespace WebApp.Controllers
 {
@@ -34,10 +36,10 @@ namespace WebApp.Controllers
             var viewModel = new FileUploadViewModel();
             viewModel.FilesOnDatabase = await context.FilesOnDB.ToListAsync();
 
-            viewModel.FilesOnDatabase.ForEach(f => { f.Owner = _userManager.FindByIdAsync(f.UploadedBy).Result; });
+            viewModel.FilesOnDatabase.ForEach(f => { f.Owner = _userManager.FindByIdAsync(f.OwnerId).Result; });
 
             viewModel.FilesOnFileSystem = await context.FilesOnServer.ToListAsync();
-            viewModel.FilesOnFileSystem.ForEach(f => { f.Owner = _userManager.FindByIdAsync(f.UploadedBy).Result; });
+            viewModel.FilesOnFileSystem.ForEach(f => { f.Owner = _userManager.FindByIdAsync(f.OwnerId).Result; });
 
             viewModel.UpdateDriverInformation();
             return viewModel;
@@ -90,13 +92,13 @@ namespace WebApp.Controllers
                 }
                 var fileModel = new FileOnFileSystemModel
                 {
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
                     FileType = file.ContentType,
                     Extension = extension,
                     Name = fileName,
                     Description = description,
                     FilePath = filePath,
-                    UploadedBy = _userManager.GetUserId(User)
+                    OwnerId = _userManager.GetUserId(User)
                 };
                 context.FilesOnServer.Add(fileModel);
             }
@@ -108,12 +110,12 @@ namespace WebApp.Controllers
             var extension = Path.GetExtension(file.FileName);
             var fileModel = new FileOnDatabaseModel
             {
-                CreatedOn = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
                 FileType = file.ContentType,
                 Extension = extension,
                 Name = fileName,
                 Description = description,
-                UploadedBy = _userManager.GetUserId(User)
+                 OwnerId = _userManager.GetUserId(User)
 
             };
             using (var dataStream = new MemoryStream())

@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebApp.Data;
+﻿using LRRS.Data.Model.Entity;
+using LRRS.Queries.DataBase; 
+using Microsoft.EntityFrameworkCore; 
+using System.Linq; 
 
 namespace WebApp.Models
 { 
@@ -54,7 +51,7 @@ namespace WebApp.Models
             {
                 var mark = new Grade()
                 {
-                    UserId = users.StudentId,
+                    StudentId = users.StudentId,
                     LessonId = this.Lesson.Id
                 };
                 _context.Grades.Add(mark);
@@ -83,7 +80,7 @@ namespace WebApp.Models
             if (LessonData != null)
             {
                 LessonData.Name = this.Lesson.Name;
-                LessonData.DateTime = this.Lesson.DateTime;
+                LessonData.CreationDate = this.Lesson.CreationDate;
                 LessonData.Description = this.Lesson.Description;
                 LessonData.Files = this.Lesson.Files;
                 _context.Entry(LessonData).State = EntityState.Modified;

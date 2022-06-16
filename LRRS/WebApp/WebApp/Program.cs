@@ -1,3 +1,5 @@
+using LRRS.Data.Model.Entity;
+using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -8,11 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using WebApp.Data;
-using WebApp.Models;
+using System.Threading.Tasks; 
 
-namespace WebApp
+namespace LRRS.WebApp
 {
     public class Program
     {

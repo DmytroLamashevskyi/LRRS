@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--https://www.ezzylearning.net/tutorial/asp-net-core-localization-from-database-->
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LRRS.Data.Model\LRRS.Data.Model.csproj" />
+    <ProjectReference Include="..\LRRS.Queries\LRRS.Queries.csproj" />
+  </ItemGroup>
+
+</Project>

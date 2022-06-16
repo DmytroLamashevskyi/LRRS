@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using LRRS.Data.Model.Entity;
+using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using WebApp.Data;
-using WebApp.Models;
+using Microsoft.EntityFrameworkCore; 
+
 
 namespace WebApp.Controllers
 {
@@ -61,7 +62,7 @@ namespace WebApp.Controllers
                 {
                     var mark = new Grade()
                     {
-                        UserId = findUser.Id,
+                        StudentId = findUser.Id,
                         LessonId = leson.Id
                     };
 
@@ -158,7 +159,7 @@ namespace WebApp.Controllers
                 {
                     var mark = new Grade()
                     {
-                        UserId = userId,
+                        StudentId = userId,
                         LessonId = leson.Id  
                     };
 
@@ -228,9 +229,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateMark(Grade grade)
         {
-            var value = grade.Value;
+            var value = grade.Points;
             grade = _context.Grades.FirstOrDefaultAsync(g => g.Id == grade.Id).Result;
-            grade.Value = value;
+            grade.Points = value;
             if (ModelState.IsValid)
             {
                 _context.Update(grade);
