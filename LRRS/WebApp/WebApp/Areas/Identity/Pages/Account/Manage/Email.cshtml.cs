@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 using EmailService;
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 
 namespace WebApp.Areas.Identity.Pages.Account.Manage
 {

@@ -1,6 +1,9 @@
 ﻿using LanguageService;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading;
 
 namespace LRRS.WebApp.Controllers
@@ -35,6 +38,21 @@ namespace LRRS.WebApp.Controllers
             }
 
             return new HtmlString(resourceKey);
+        }
+
+        [HttpPost]
+        public IActionResult ChangeLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddDays(7)
+                }
+            );
+
+            return LocalRedirect(returnUrl);
         }
     }
 }

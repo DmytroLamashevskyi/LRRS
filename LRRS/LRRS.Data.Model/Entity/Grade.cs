@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LRRS.Data.Model.Entity.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,7 +25,7 @@ namespace LRRS.Data.Model.Entity
         [ForeignKey("Lesson ID")]
         public string LessonId { set; get; }
 
-        public virtual ApplicationUser User { set; get; }
+        public virtual ApplicationUser Student { set; get; }
         public virtual Lesson Lesson { set; get; }
     }
 }

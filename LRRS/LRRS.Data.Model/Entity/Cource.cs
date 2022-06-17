@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LRRS.Data.Model.Entity.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace LRRS.Data.Model.Entity
 {
+    [Table("Cources")]
     public class Cource
     {
         [Key]
@@ -23,7 +25,7 @@ namespace LRRS.Data.Model.Entity
         [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [ForeignKey("Id")]
+        [ForeignKey("OwnerId")]
         public string OwnerId { get; set; }
 
         [MaxLength(16)]

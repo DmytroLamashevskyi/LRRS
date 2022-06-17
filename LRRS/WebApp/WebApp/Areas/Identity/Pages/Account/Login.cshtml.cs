@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using System.Net.Mail;
 
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 
 namespace WebApp.Areas.Identity.Pages.Account
 {

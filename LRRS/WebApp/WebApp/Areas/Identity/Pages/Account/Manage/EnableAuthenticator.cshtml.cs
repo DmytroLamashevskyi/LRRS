@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 
 namespace WebApp.Areas.Identity.Pages.Account.Manage
 {

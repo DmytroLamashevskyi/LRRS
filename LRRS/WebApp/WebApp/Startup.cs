@@ -1,6 +1,7 @@
 using EmailService;
 using LanguageService;
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +18,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Globalization; 
+using System.Globalization;
+using System.Linq;
 
 namespace LRRS.WebApp
 {
@@ -34,24 +37,11 @@ namespace LRRS.WebApp
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"), assembly => assembly.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-            services.AddMvc().AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
-                    .AddDataAnnotationsLocalization();
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                    var cultures = new List<CultureInfo>
-                    {
-                        new CultureInfo("en"),//English
-                        new CultureInfo("ru"),//Russian
-                        new CultureInfo("zh"),//Chinese simplified 
-                    };
-                    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en");
-                    options.SupportedCultures = cultures;
-                    options.SupportedUICultures = cultures;
-            });
+            services.AddMvc();
 
+            //Email  Service
             var emailConfig = Configuration
                             .GetSection("EmailConfiguration")
                             .Get<EmailConfiguration>();
@@ -63,6 +53,8 @@ namespace LRRS.WebApp
                 options.MultipartBodyLengthLimit = int.MaxValue;
                 options.MultipartHeadersLengthLimit = int.MaxValue;
             });
+
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {
                         options.Password = Configuration.GetSection("PasswordRequirements").Get<PasswordOptions>(); 
@@ -75,9 +67,21 @@ namespace LRRS.WebApp
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            //Language and LocalizationService
+            //Language and Localization Service
+            services.AddLocalization();
             services.AddScoped<ILanguageService, LanguageService.LanguageService>();
             services.AddScoped<ILocalizationService, LocalizationService>();
+            services.AddControllersWithViews().AddViewLocalization();
+            var cultures =  services.BuildServiceProvider().GetRequiredService<ILanguageService>().GetLanguages().Select(x => new CultureInfo(x.Culture)).ToArray();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var englishCulture = cultures.FirstOrDefault(x => x.Name == "en-US");
+                options.DefaultRequestCulture = new RequestCulture(englishCulture?.Name ?? "en-US");
+
+                options.SupportedCultures = cultures;
+                options.SupportedUICultures = cultures;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,8 +105,8 @@ namespace LRRS.WebApp
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseRequestLocalization(app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+            app.UseRequestLocalization();
+            //app.UseRequestLocalization(app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 
             app.UseEndpoints(endpoints =>
@@ -113,5 +117,7 @@ namespace LRRS.WebApp
                 endpoints.MapRazorPages();
             });
         }
+   
+     
     }
 }

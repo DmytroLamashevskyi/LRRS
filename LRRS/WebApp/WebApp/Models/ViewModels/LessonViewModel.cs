@@ -27,9 +27,9 @@ namespace WebApp.Models
                 return null;
             }
             else
-            { 
-                this.Cource = _context.Cource.FirstOrDefault(c => c.Id == this.Lesson.CourceId);
-                CourceId = this.Lesson.CourceId;
+            {
+                this.Cource = _context.Cources.Where(c => c.Lessons.Contains(Lesson)).FirstOrDefault();
+                CourceId = this.Cource.Id;
                 LessonId = lessonId;
 
             }
@@ -38,8 +38,7 @@ namespace WebApp.Models
         }
 
         public LessonViewModel CreateLesson(ApplicationDbContext _context)
-        {
-            this.Lesson.CourceId = this.Cource.Id;
+        { 
 
             _context.Add(this.Lesson);
             _context.SaveChanges();

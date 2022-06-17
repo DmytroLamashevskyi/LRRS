@@ -16,15 +16,12 @@ namespace LRRS.Data.Model.Entity.Quiz
         [Required]
         public string Header { set; get; }
 
+        public string Description { set; get; }
+
         [Display(Name = "Begin")]
         public DateTime Start { set; get; } 
         [Display(Name = "Finish")]
-        public DateTime End { set; get; }
-        
-        [ForeignKey("Id")]
-        public string LessonId { set; get; }
-
-        public virtual Lesson Lesson { set; get; }
+        public DateTime End { set; get; } 
         public ICollection<Question> Questions { get; set; } 
     }
 }

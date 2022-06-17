@@ -1,4 +1,5 @@
 ﻿using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

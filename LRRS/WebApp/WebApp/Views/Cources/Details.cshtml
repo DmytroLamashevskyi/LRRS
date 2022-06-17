@@ -1,8 +1,8 @@
-﻿@using Microsoft.AspNetCore.Identity;
+﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager;
 
 
-@model WebApp.Models.Cource
+@model Cource
 
 @{
 	ViewData["Title"] = "Details";
@@ -79,7 +79,7 @@
 								@Html.DisplayFor(modelItem => item.Name)
 			 </td>
 			 <td>
-								@Html.DisplayFor(modelItem => item.DateTime)
+								@Html.DisplayFor(modelItem => item.CreationDate)
 			 </td>
 			 <td>
 								@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
@@ -209,7 +209,7 @@
 							 UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Student.ToString())
 						)
 						{
-							@if (grade.User.Id != UserManager.GetUserAsync(User)?.Result.Id)
+							@if (grade.StudentId != UserManager.GetUserAsync(User)?.Result.Id)
 							{
 								continue;
 							}
@@ -219,14 +219,14 @@
 
 			<tr>
 			 <td>
-					@if(grade.User !=null){
-								@Html.DisplayFor(modelItem => grade.User.StudentId)
+					@if(grade.Student !=null){
+								@Html.DisplayFor(modelItem => grade.Student.StudentId)
 					} 
 			 </td>
 			 <td>
-					@if(grade.User !=null){
-								@Html.DisplayFor(modelItem => grade.User.FirstName)
-								@Html.DisplayFor(modelItem => grade.User.LastName)
+					@if(grade.Student !=null){
+								@Html.DisplayFor(modelItem => grade.Student.FirstName)
+								@Html.DisplayFor(modelItem => grade.Student.LastName)
 					} 
 			 </td>
 			 <td>
@@ -234,7 +234,7 @@
 			 </td>
 			 <td>
 				<div class="progress">
-				  <div class="progress-bar" role="progressbar" style="width: @grade.Value%;" aria-valuenow="@grade.Value" aria-valuemin="0" aria-valuemax="100">@grade.Value %</div>
+				  <div class="progress-bar" role="progressbar" style="width: @grade.Points%;" aria-valuenow="@grade.Points" aria-valuemin="0" aria-valuemax="100">@grade.Points%</div>
 				</div>
 			 </td>
 			 <td>

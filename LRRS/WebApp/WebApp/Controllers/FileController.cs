@@ -1,5 +1,6 @@
 ﻿using LRRS.Data.Model.Entity;
 using LRRS.Data.Model.Entity.File;
+using LRRS.Data.Model.Entity.Identity;
 using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {

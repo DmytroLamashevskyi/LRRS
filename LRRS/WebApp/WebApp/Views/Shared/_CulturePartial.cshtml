@@ -1,30 +1,27 @@
 ﻿@using Microsoft.AspNetCore.Builder
 @using Microsoft.AspNetCore.Localization
-@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
-
-@inject IViewLocalizer Localizer
+ 
 @inject IOptions<RequestLocalizationOptions> LocOptions
-
+ 
 @{
+    string returnUrl = ViewContext.HttpContext.Request.Path;
+ 
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
     var cultureItems = LocOptions.Value.SupportedUICultures
-        .Select(c => new SelectListItem { Value = c.Name, Text = Localizer.GetString(c.Name) })
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
         .ToList();
-    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString}";
 }
-<div title="@Localizer["Request culture provider"] @requestCulture?.Provider?.GetType().Name">
-    <form id="selectLanguage" 
-          asp-controller="Culture"
-          asp-action="SetCulture" 
-          asp-route-returnUrl="@returnUrl"
-          method="post" 
-          class="form-horizontal nav-link text-dark" 
-          role="form">
-        <select name="culture" class="custom-select"
-                onchange="this.form.submit();" 
-                asp-for="@requestCulture.RequestCulture.UICulture.Name" 
-                asp-items="cultureItems">
+
+<div> 
+    <form asp-action="ChangeLanguage" asp-controller="Home" method="post" class="form-horizontal nav-link text-dark"  role="form">
+        <input type="hidden" id="returnUrl" name="returnUrl" value="@returnUrl" />
+        <select id="culture"
+                name="culture"
+                class="form-control"
+                onchange="this.form.submit();"
+                asp-items="cultureItems"
+                asp-for="@requestCulture.RequestCulture.UICulture.Name">
         </select>
     </form>
 </div>

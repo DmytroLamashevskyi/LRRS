@@ -1,4 +1,5 @@
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

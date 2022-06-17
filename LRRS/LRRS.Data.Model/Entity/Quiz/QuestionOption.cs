@@ -24,10 +24,7 @@ namespace LRRS.Data.Model.Entity.Quiz
         [Range(1,100,ErrorMessage = "Min points 1 Max points 100.")]
         [Display(Name = "Points")]
         public int Points { set; get; }
-
-        [ForeignKey("Id")]
-        public string QuestionId { set; get; }
-
+          
         public virtual Question Question { set; get; }
 
     }

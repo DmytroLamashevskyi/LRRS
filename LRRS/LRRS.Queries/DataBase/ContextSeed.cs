@@ -1,8 +1,8 @@
 ﻿using LRRS.Data.Model.Entity;
 using LRRS.Data.Model.Entity.Enums;
+using LRRS.Data.Model.Entity.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 
 namespace LRRS.Queries.DataBase
 {
@@ -23,14 +23,16 @@ namespace LRRS.Queries.DataBase
                    .SetBasePath(Directory.GetCurrentDirectory())
                    .AddJsonFile("appsettings.json", optional: true)
                    .Build();
-            var data = config.GetSection("SuperAdmin") as ApplicationUser;
+
+            var data = config.GetSection("SuperAdmin");
             //Seed Default User
             var defaultUser = new ApplicationUser
             {
-                UserName = data.UserName,
-                Email = data.Email,
-                FirstName = data.FirstName,
-                LastName = data.LastName,
+                UserName = data["UserName"],   
+                Email = data["Email"],
+                FirstName = data["FirstName"],
+                LastName = data["LastName"],
+                Country = data["Country"],
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
             };
@@ -39,7 +41,7 @@ namespace LRRS.Queries.DataBase
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, data.PasswordHash);
+                    await userManager.CreateAsync(defaultUser, data["PasswordHash"]);
                     await userManager.AddToRoleAsync(defaultUser, Roles.Visitor.ToString());
                     await userManager.AddToRoleAsync(defaultUser, Roles.Student.ToString());
                     await userManager.AddToRoleAsync(defaultUser, Roles.Lecturer.ToString());

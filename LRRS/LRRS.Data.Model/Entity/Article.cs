@@ -24,9 +24,9 @@ namespace LRRS.Data.Model.Entity
 
         [Display(Name = "Short Message")]
         [MaxLength(100, ErrorMessage = "Max message length 100 characters.")]
-        public string ShortMessage { set; get; }
+        public string? ShortMessage { set; get; }
 
-        public string ImageUrl { set; get; }
+        public string? ImageUrl { set; get; }
 
 
 

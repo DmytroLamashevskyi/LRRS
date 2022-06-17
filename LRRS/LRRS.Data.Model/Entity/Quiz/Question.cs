@@ -15,11 +15,7 @@ namespace LRRS.Data.Model.Entity.Quiz
         public string Id { set; get; }
         [Required]
         public string Text { set; get; }
-
-        [ForeignKey("Id")]
-        public string QuizId { set; get; }
-        public virtual Quiz Quiz { set; get; }
-        
+           
         public ICollection<QuestionOption> QuestionOptions { get; set; } 
     }
 }

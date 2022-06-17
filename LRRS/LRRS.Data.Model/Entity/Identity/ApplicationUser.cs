@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LRRS.Data.Model.Entity
+namespace LRRS.Data.Model.Entity.Identity
 {
     public class ApplicationUser:  IdentityUser
     {
@@ -24,23 +24,23 @@ namespace LRRS.Data.Model.Entity
 
         [Display(Name = "Serial Passport")]
         [RegularExpression(@"^(?!^0+$)[a-zA-Z0-9]{6,9}$", ErrorMessage = "Please enter your Passport Number with leters.")]
-        public string SerialPassport { set; get; }
+        public string? SerialPassport { set; get; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Birthday")]
         public DateTime Birthday { set; get; }
 
         [Display(Name = "Country")]
-        public string Country { set; get; }
+        public string? Country { set; get; }
 
         [StringLength(13)]
         [Display(Name = "Student ID")]
         [RegularExpression(@"^\d{13}$", ErrorMessage = "Please, Enter valid Student Id Number.")]
-        public string StudentId { set; get; }
+        public string? StudentId { set; get; }
 
         [Display(Name = "Is Blocked")]
         public bool IsBlocked { set; get; }
-        public byte[] UserPicture { get; set; }
+        public byte[]? UserPicture { get; set; }
 
 
         public virtual ICollection<FileModel> Files { get; set; }

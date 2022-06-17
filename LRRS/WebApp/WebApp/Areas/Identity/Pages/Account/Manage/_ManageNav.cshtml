@@ -1,4 +1,4 @@
-﻿@using WebApp.Models
+﻿@using LRRS.Data.Model.Entity.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();

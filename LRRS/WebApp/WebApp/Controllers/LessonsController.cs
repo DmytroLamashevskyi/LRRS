@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc; 
@@ -26,7 +27,7 @@ namespace WebApp.Controllers
         // GET: Lessons
         public async Task<IActionResult> Index(string courceId)
         {
-            return View(await _context.Lessons.Select(l => l.CourceId == courceId && !  l.IsDeleted).ToListAsync());
+            return View(_context.Cources.FirstOrDefault(l => l.Id == courceId && !l.IsDeleted).Lessons);
         }
 
         // GET: Lessons/Details/5
@@ -114,7 +115,7 @@ namespace WebApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", "Cources", new { Id = courceLesson.Lesson.CourceId });
+                return RedirectToAction("Details", "Cources", new { Id = courceLesson.Cource.Id });
             }
             return Details(courceLesson.Lesson.Id);
         } 
@@ -139,7 +140,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var lesson = await _context.Lessons.FindAsync(id);
-            var cource = await _context.Cource.FindAsync(lesson.CourceId);
+            var cource =  _context.Cources.Where(c=>c.Lessons.Contains(lesson)).FirstOrDefault();
             lesson.IsDeleted = true;
             _context.Lessons.Update(lesson);
             await _context.SaveChangesAsync();

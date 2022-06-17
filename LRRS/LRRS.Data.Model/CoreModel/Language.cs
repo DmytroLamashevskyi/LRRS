@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace LRRS.Data.Model.CoreModel
 {
+    [Table("Languages")]
     public class Language
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+         
         [Required]
-        public string Name { get; set; }    
-        [Required]
-        public string Culture { get; set; }  
+        public string Name { get; set; }     
+        public string? Culture { get; set; }   
 
-        public virtual ICollection<StringResource> StringResources { get; set; } = new HashSet<StringResource>();
+        public virtual ICollection<StringResource> StringResources { set; get; }
     }
 }

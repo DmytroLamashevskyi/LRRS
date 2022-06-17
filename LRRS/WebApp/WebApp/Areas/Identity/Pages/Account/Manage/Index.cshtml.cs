@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,7 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var firstName = user.FirstName;
             var lastName = user.LastName;
-            var profilePicture = user.ProfilePicture; 
+            var profilePicture = user.UserPicture; 
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
@@ -98,7 +99,7 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
                 using (var dataStream = new MemoryStream())
                 {
                     await file.CopyToAsync(dataStream);
-                    user.ProfilePicture = dataStream.ToArray();
+                    user.UserPicture = dataStream.ToArray();
                 }
                 await _userManager.UpdateAsync(user);
             }

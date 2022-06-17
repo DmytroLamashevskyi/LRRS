@@ -1,4 +1,5 @@
 ﻿using LRRS.Data.Model.Entity.File;
+using LRRS.Data.Model.Entity.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace LRRS.Data.Model.Entity
 {
+    [Table("Lessons")]
     public class Lesson
     {
         [Key]
@@ -23,13 +25,12 @@ namespace LRRS.Data.Model.Entity
         [DataType(DataType.Html)]
         [Display(Name = "Description")]
         public string Description { set; get; }
+         
+        [ForeignKey("AuthorId")]
+        public string? AuthorId { set; get; }
 
-        [Required]
-        [ForeignKey("Cource ID")]
-        public string CourceId { set; get; }
-        [Required]
-        [ForeignKey("Author ID")]
-        public string AuthorId { set; get; }
+        [ForeignKey("CourceId")]
+        public string? CourceId { set; get; }
 
         [Display(Name = "Creation Date")]
         [DataType(DataType.Date)]
@@ -38,11 +39,11 @@ namespace LRRS.Data.Model.Entity
         [Display(Name = "Is Deleted")]
         public bool IsDeleted { set; get; }
 
-
-        public Cource Cource { set; get; }
-        public ApplicationUser Author { set; get; }
+        public virtual Cource Cource { set; get; }
+        public virtual ApplicationUser Author { set; get; }
         public virtual ICollection<Grade> Marks { set; get; }
         public virtual ICollection<FileModel> Files { set; get; }
         public virtual ICollection<Quiz.Quiz> Quizzes { set; get; }
+
     }
 }

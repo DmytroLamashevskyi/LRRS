@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Enums;
+using LRRS.Data.Model.Entity.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

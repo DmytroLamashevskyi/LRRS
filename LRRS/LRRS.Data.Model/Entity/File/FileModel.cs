@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LRRS.Data.Model.Entity.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,13 +22,13 @@ namespace LRRS.Data.Model.Entity.File
         public string Name { get; set; }
 
         [Display(Name = "File Type")]
-        public string FileType { get; set; }
+        public string? FileType { get; set; }
 
         [Display(Name = "Extension")]
-        public string Extension { get; set; }
+        public string? Extension { get; set; }
 
         [Display(Name = "Description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [ForeignKey("OwnerId")]
         [Display(Name = "Uploaded By")]
@@ -43,6 +44,8 @@ namespace LRRS.Data.Model.Entity.File
 
         [Display(Name = "Is Deleted")]
         public bool IsDeleted { get; set; }
+        
+        [Required]
         public virtual ApplicationUser Owner { set; get; }
     }
 }

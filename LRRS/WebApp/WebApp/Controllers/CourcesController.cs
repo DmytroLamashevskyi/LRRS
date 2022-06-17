@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using LRRS.Data.Model.Entity;
+using LRRS.Data.Model.Entity.Identity;
 using LRRS.Queries.DataBase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +27,12 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> RegisterOnCource(string id, string passwordString)
         {
-           var cource = _context.Cource.FirstOrDefaultAsync(c => c.Id == id && c.Password == passwordString).Result;
+           var cource = _context.Cources.FirstOrDefaultAsync(c => c.Id == id && c.Password == passwordString).Result;
 
             if (cource == null)
             {
                 ViewBag.Message  = "Wrong password.";
-                var cources = await _context.Cource.ToListAsync();
+                var cources = await _context.Cources.ToListAsync();
                 cources = cources.Where(c => !c.IsDeleted).ToList();
 
                 foreach (var item in cources)
@@ -56,7 +57,7 @@ namespace WebApp.Controllers
 
                 _context.Students.Add(data);
 
-                var lesonList = _context.Lessons.Where(u => u.CourceId == data.CourceId && !u.IsDeleted).ToList();
+                List<Lesson> lesonList = new List<Lesson>() ; // _context.Lessons.Where(u => u.Cource.Id == data.CourceId && !u.IsDeleted).ToList();
                 var marks = new List<Grade>();
                 foreach (var leson in lesonList)
                 {
@@ -79,7 +80,7 @@ namespace WebApp.Controllers
         // GET: Cources
         public async Task<IActionResult> Index(string searchString,string userId)
         {
-            var cources = await _context.Cource.ToListAsync();
+            var cources = await _context.Cources.ToListAsync();
             cources = cources.Where(c =>!c.IsDeleted).ToList();
              
             if (!String.IsNullOrEmpty(userId))
@@ -151,9 +152,9 @@ namespace WebApp.Controllers
             var findUser =  _context.Students.FirstOrDefault(s => s.CourceId == data.CourceId && s.StudentId == data.StudentId);
             if (findUser == null)
             {
-                _context.Students.Add(data); 
+                _context.Students.Add(data);
 
-                var lesonList = _context.Lessons.Where(u => u.CourceId == data.CourceId && !u.IsDeleted).ToList();
+                var lesonList = new List<Lesson>();//_context.Lessons.Where(u => u.Cource.Id == data.CourceId && !u.IsDeleted).ToList();
                 var marks = new List<Grade>();
                 foreach (var leson in lesonList)
                 {
@@ -199,12 +200,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var cource = await _context.Cource
+            var cource = await _context.Cources
                 .FirstOrDefaultAsync(m => m.Id == id);
-            cource.Owner = await _context.Users.FirstOrDefaultAsync(u=>u.Id == cource.OwnerId);
-            cource.Lessons =  _context.Lessons.Where(u => u.CourceId == id && !u.IsDeleted).ToList();
-            var studentsList = _context.Students.Where(s => s.CourceId == id).Select(s => s.StudentId).ToArray();
-            cource.Students = _userManager.Users.Where(u => studentsList.Contains(u.Id)).ToList();
+            //cource.Owner = await _context.Users.FirstOrDefaultAsync(u=>u.Id == cource.OwnerId);
+            //cource.Lessons =  _context.Lessons.Where(u => u.Cource.Id == id && !u.IsDeleted).ToList();
+            //var studentsList = _context.Students.Where(s => s.CourceId == id).Select(s => s.StudentId).ToArray();
+            //cource.Students = _userManager.Users.Where(u => studentsList.Contains(u.Id)).ToList();
 
             foreach (var lesson in cource.Lessons)
             {
@@ -237,7 +238,7 @@ namespace WebApp.Controllers
                 _context.Update(grade);
                 await _context.SaveChangesAsync();
                 grade.Lesson = _context.Lessons.FirstOrDefault(l => l.Id == grade.LessonId && !l.IsDeleted);
-                return RedirectToAction("Details", "Cources", new { Id = grade.Lesson.CourceId });
+                return RedirectToAction("Details", "Cources", new { Id = 2/* grade.Lesson.Cource.Id*/ });
             }
 
 
@@ -280,7 +281,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var cource = await _context.Cource.FindAsync(id);
+            var cource = await _context.Cources.FindAsync(id);
             if (cource == null)
             {
                 return NotFound();
@@ -334,7 +335,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var cource = await _context.Cource
+            var cource = await _context.Cources
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cource == null)
             {
@@ -349,16 +350,16 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var cource = await _context.Cource.FindAsync(id);
+            var cource = await _context.Cources.FindAsync(id);
             cource.IsDeleted = true;
-            _context.Cource.Update(cource);
+            _context.Cources.Update(cource);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CourceExists(string id)
         {
-            return _context.Cource.Any(e => e.Id == id);
+            return _context.Cources.Any(e => e.Id == id);
         }
     }
 }

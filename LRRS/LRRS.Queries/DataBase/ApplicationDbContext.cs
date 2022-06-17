@@ -1,8 +1,8 @@
 ﻿using LRRS.Data.Model.CoreModel;
 using LRRS.Data.Model.Entity;
 using LRRS.Data.Model.Entity.File;
-using LRRS.Data.Model.Entity.Quiz;
-using LRRS.Data.Model.Entity.Quiz;
+using LRRS.Data.Model.Entity.Identity;
+using LRRS.Data.Model.Entity.Quiz; 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore; 
@@ -20,23 +20,15 @@ namespace LRRS.Queries.DataBase
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.HasDefaultSchema("Identity");
+            builder.HasDefaultSchema("Lrr");
 
-            builder.Entity<UserMark>(entity =>
-            {
-                entity.ToTable(name: "TestMarks");
-            });
-
+            builder.Entity<UserMark>(); 
             builder.Entity<Language>(entity =>
             {
+                entity.HasMany(c => c.StringResources);
                 entity.ToTable(name: "Languages");
-                entity.OwnsMany(c=>c.StringResources);
             });
-
-            builder.Entity<StringResource>(entity =>
-            {
-                entity.ToTable(name: "StringResources");
-            });
+            builder.Entity<StringResource>();
 
             builder.Entity<FileOnFileSystemModel>(entity =>
             {
@@ -49,27 +41,32 @@ namespace LRRS.Queries.DataBase
                 entity.ToTable(name: "FileOnDatabase");
             });
             builder.Entity<Cource>(entity =>
-            {
-                entity.HasMany(c => c.Lessons);
-                entity.HasMany(c => c.Students);
+            { 
+                entity.HasMany(c => c.Students); 
                 entity.ToTable(name: "Cources");
             });
             builder.Entity<Lesson>(entity =>
             {
                 entity.HasMany(c => c.Files);
                 entity.HasMany(c => c.Marks);
-                entity.HasMany(c => c.Quizzes);
+                entity.HasMany(c => c.Quizzes); 
+                entity.HasOne(c=>c.Cource)
+                .WithMany(ta => ta.Lessons)
+                .HasForeignKey(u => u.CourceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
                 entity.ToTable(name: "Lessons");
             });
 
             builder.Entity<Quiz>(entity =>
             {
                 entity.HasMany(c => c.Questions); 
-                entity.ToTable(name: "Questions");
+                entity.ToTable(name: "Quizzes");
             });
             builder.Entity<Question>(entity =>
-            {
+            { 
                 entity.HasMany(c => c.QuestionOptions);
+                entity.HasKey(c => c.Id);
                 entity.ToTable(name: "Questions");
             });
 
@@ -89,49 +86,56 @@ namespace LRRS.Queries.DataBase
                 entity.HasMany(c => c.Grades);
                 entity.HasMany(c => c.Files);
                 entity.HasMany(c => c.Cources);
-            }); 
-
-            builder.Entity<IdentityUser>(entity =>
-            {
                 entity.ToTable(name: "User");
-            });
+            }); 
+             
             builder.Entity<IdentityRole>(entity =>
             {
                 entity.ToTable(name: "Role");
             });
-            builder.Entity<IdentityUserRole<string>>(entity =>
+            builder.Entity<ApplicationUserRole>(entity =>
             {
                 entity.ToTable("UserRoles");
+                entity.HasNoKey();
             });
-            builder.Entity<IdentityUserClaim<string>>(entity =>
+            builder.Entity<ApplicationUserClaim>(entity =>
             {
                 entity.ToTable("UserClaims");
             });
-            builder.Entity<IdentityUserLogin<string>>(entity =>
+            builder.Entity<ApplicationUserLogin>(entity =>
             {
                 entity.ToTable("UserLogins");
+                entity.HasNoKey();
             });
 
-            builder.Entity<IdentityRoleClaim<string>>(entity =>
+            builder.Entity<ApplicationRoleClaim>(entity =>
             {
                 entity.ToTable("RoleClaims");
             });
-            builder.Entity<IdentityUserToken<string>>(entity =>
+            builder.Entity<ApplicationUserToken>(entity =>
             {
                 entity.ToTable("UserTokens");
+                entity.HasNoKey();
             });
+
+
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
 
         }
 
-        public DbSet<Cource> Cource { get; set; }
+        public DbSet<Cource> Cources { get; set; }
         public DbSet<StudentCource> Students { get; set; }
         public DbSet<Lesson> Lessons { get; set; } 
         public DbSet<Grade> Grades { get; set; }
         public DbSet<FileOnDatabaseModel> FilesOnDB { get; set; }
         public DbSet<FileOnFileSystemModel> FilesOnServer { get; set; }
-        public DbSet<Quiz> Quizs { get; set; }
+        public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<StringResource> StringResources { get; set; }
+        public DbSet<ApplicationUserDevice> ApplicationUserDevices { get; set; }
     }
 }

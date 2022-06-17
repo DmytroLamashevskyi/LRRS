@@ -31,7 +31,6 @@
     <Folder Include="Files\" />
     <Folder Include="Resources\Views\Lessons\" />
     <Folder Include="Resources\Views\UserRoles\" />
-    <Folder Include="Views\Lessons\ClassTest\" />
   </ItemGroup>
 
   <ItemGroup>
