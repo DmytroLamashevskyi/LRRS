@@ -12,6 +12,7 @@ namespace LRRS.WebApp.Controllers
     {
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        public delegate HtmlString Localizer(string resourceKey, params object[] args);
 
         public BaseController(ILanguageService languageService, ILocalizationService localizationService)
         {

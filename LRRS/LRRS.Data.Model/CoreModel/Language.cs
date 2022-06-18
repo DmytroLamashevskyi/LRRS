@@ -19,6 +19,6 @@ namespace LRRS.Data.Model.CoreModel
         public string Name { get; set; }     
         public string? Culture { get; set; }   
 
-        public virtual ICollection<StringResource> StringResources { set; get; }
+        public virtual ICollection<StringResource> StringResources { set; get; } = new List<StringResource>();
     }
 }

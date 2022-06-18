@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using PDFTemplateService;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -82,6 +83,9 @@ namespace LRRS.WebApp
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures = cultures;
             });
+
+            //PDF Services 
+            services.AddScoped<ITemplateService, RazorViewsTemplateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,8 +111,8 @@ namespace LRRS.WebApp
             app.UseAuthorization();
             app.UseRequestLocalization();
             //app.UseRequestLocalization(app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
-
-
+             
+            app.PreparePuppeteerAsync(env).GetAwaiter().GetResult();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

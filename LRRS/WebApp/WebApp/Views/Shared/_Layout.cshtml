@@ -2,82 +2,102 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+	
+@inherits CustomBaseViewPage<TModel>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - WebApp</title> 
-	<link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" />
-	<link rel="stylesheet" href="~/lib/Font-Awesome/css/regular.min.css">
-	<link rel="stylesheet" href="~/lib/Font-Awesome/css/solid.min.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApp</title>
+    <link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" />
+    <link rel="stylesheet" href="~/lib/Font-Awesome/css/regular.min.css">
+    <link rel="stylesheet" href="~/lib/Font-Awesome/css/solid.min.css">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="~/css/site.css" />
-	<link rel="stylesheet" href="/richtexteditor/rte_theme_default.css" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/richtexteditor/rte.js"></script>
-	<script type="text/javascript" src='/richtexteditor/plugins/all_plugins.js'></script>
-	<script type="text/javascript" src="/rte-upload.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="/richtexteditor/rte_theme_default.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/richtexteditor/rte.js"></script>
+    <script type="text/javascript" src='/richtexteditor/plugins/all_plugins.js'></script>
+    <script type="text/javascript" src="/rte-upload.js"></script>
 
 </head>
 <body>
-	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom ">
-			<div class="container">
-				<a class="navbar-brand"  asp-area="" asp-controller="Home" asp-action="Index">
-					<img src="~/img/Logo.png"  class="me-2"  height="48" title="@localizer["WebName"]" alt="@localizer["WebName"]">
-				</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-						aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-					<partial name="_LoginPartial" />
-					<ul class="navbar-nav flex-grow-1">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-newspaper"></i> @localizer["NewsHeader"]</a>
-						</li> 
-						@if (SignInManager.IsSignedIn(User))
-						{
-		  <li class="nav-item">
-		   <a class="nav-link text-dark" asp-area="" asp-controller="Cources" asp-action="Index"><i class="fas fa-graduation-cap" > </i> @localizer["CourcesHeader"]</a>
-		  </li>
-							@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
-							{
-			  <li class="nav-item">
-			   <a class="nav-link text-dark" asp-area="" asp-controller="File" asp-action="Index"><i class="fas fa-database"></i> @localizer["FilesHeader"]</a>
-			  </li>
-							}
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom ">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/Logo.png" class="me-2" height="48" title="@localizer["WebName"]" alt="@localizer["WebName"]">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-newspaper"></i> @localizer["NewsHeader"]</a>
+                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Cources" asp-action="Index"><i class="fas fa-graduation-cap"> </i> @localizer["CourcesHeader"]</a>
+                            </li>
+                            @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Lecturer.ToString()))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="File" asp-action="Index"><i class="fas fa-database"></i> @localizer["FilesHeader"]</a>
+                                </li>
+                            }
 
-							@if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Administrator.ToString()))
-							{
-			  <li class="nav-item">
-			   <a class="nav-link text-dark" asp-area="" asp-controller="UserRoles" asp-action="Index"><i class="fas fa-users"></i> @localizer["UsersHeader"]</a>
-			  </li>
-							}
-						}
-	 </ul>
-	</div>
-   </div>
-  </nav>
- </header>
- <div class="container">
-  <main role="main" class="pb-3">
-			@RenderBody()
-  </main>
- </div>
+                            @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Administrator.ToString()))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="UserRoles" asp-action="Index"><i class="fas fa-users"></i> @localizer["UsersHeader"]</a>
+                                </li>
+                            }
 
- <footer class="border-top footer text-muted">
-  <div class="container">
-   &copy; 2021 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-  </div>
- </footer>
- <script src="~/lib/jquery/dist/jquery.min.js"></script>
- <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
- <script src="~/js/site.js" asp-append-version="true"></script>
-	@RenderSection("Scripts", required: false)
+                            @if (UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result).Result.Contains(Roles.Administrator.ToString()))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cogs"></i> @localizer["UsersHeader"]</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Languages" asp-action="Index"><i class="fas fa-language"></i>@Localize("Language.MenuHeader")</a>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Languages" asp-action="Index"><i class="fas fa-file-code"></i> @localizer["StringResources.MenuHeader"]</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Separated link</a>
+                                    </div>
+
+                                </li>
+                            }
+
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

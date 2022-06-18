@@ -38,6 +38,7 @@
     <ProjectReference Include="..\..\LanguageService\LanguageService.csproj" />
     <ProjectReference Include="..\..\LRRS.Data.Model\LRRS.Data.Model.csproj" />
     <ProjectReference Include="..\..\LRRS.Queries\LRRS.Queries.csproj" />
+    <ProjectReference Include="..\..\PDFTemplateService\PDFTemplateService.csproj" />
   </ItemGroup>
 
 </Project>

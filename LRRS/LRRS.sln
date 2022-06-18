@@ -11,15 +11,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LRRS.WebApp", "WebApp\WebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService", "EmailService\EmailService.csproj", "{D4335D4E-F1AB-4713-93B0-BECF3156A0F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LRRS.Data.Model", "LRRS.Data.Model\LRRS.Data.Model.csproj", "{CED5C8CB-5DAA-4AE6-85C2-27AA617749AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LRRS.Data.Model", "LRRS.Data.Model\LRRS.Data.Model.csproj", "{CED5C8CB-5DAA-4AE6-85C2-27AA617749AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LRRS.Queries", "LRRS.Queries\LRRS.Queries.csproj", "{0C161DFE-C9BF-4F26-A15F-5A1308E4A9BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LRRS.Queries", "LRRS.Queries\LRRS.Queries.csproj", "{0C161DFE-C9BF-4F26-A15F-5A1308E4A9BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LRRS.Queries.Tests", "LRRS.Queries.Tests\LRRS.Queries.Tests.csproj", "{E9A5E334-AAC4-4F9E-AC32-1461DDB3966C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{FF684CC9-0419-40DF-8284-C5819CBCE2AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{FF684CC9-0419-40DF-8284-C5819CBCE2AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageService", "LanguageService\LanguageService.csproj", "{73F99557-DC29-4F23-9D7C-CEE21D11AF06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanguageService", "LanguageService\LanguageService.csproj", "{73F99557-DC29-4F23-9D7C-CEE21D11AF06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFTemplateService", "PDFTemplateService\PDFTemplateService.csproj", "{C79743A9-BADE-4EB2-BFBC-47136A410DAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{73F99557-DC29-4F23-9D7C-CEE21D11AF06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73F99557-DC29-4F23-9D7C-CEE21D11AF06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73F99557-DC29-4F23-9D7C-CEE21D11AF06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C79743A9-BADE-4EB2-BFBC-47136A410DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C79743A9-BADE-4EB2-BFBC-47136A410DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C79743A9-BADE-4EB2-BFBC-47136A410DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C79743A9-BADE-4EB2-BFBC-47136A410DAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
